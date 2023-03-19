@@ -1,4 +1,6 @@
-import { Observer } from "../Observer";
+import { Observer } from "../Observer/Observer";
+import { Subject } from "../Observer/Subject";
+import { Person } from "../Person";
 
 // Concrete observer class for sending notifications via Slack
 class SlackNotifier implements Observer {
@@ -9,8 +11,9 @@ class SlackNotifier implements Observer {
   }
 
   // Update method called by the subject when a change occurs
-  update(username: string, message: string): void {
-    console.log(`Sending Slack notification to ${this.slackUsername}: ${message}`);
+  update(subject: Subject, message: string): void {
+
+    // console.log(`Sending Slack notification to ${this.slackUsername}: ${message}`);
     // TODO: Implement sending Slack notification
   }
 }

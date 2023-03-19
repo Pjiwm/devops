@@ -1,4 +1,8 @@
-import { Observer } from "../Observer";
+// import { Observer } from "../Observer";
+
+import { Observer } from "../Observer/Observer";
+import { Subject } from "../Observer/Subject";
+
 
 // Concrete observer class for sending notifications via email
 class EmailNotifier implements Observer {
@@ -9,7 +13,7 @@ class EmailNotifier implements Observer {
   }
 
   // Update method called by the subject when a change occurs
-  update(username: string, message: string): void {
+  update(subject: Subject, message: string): void {
     console.log(`Sending email notification to ${this.emailAddress}: ${message}`);
     // TODO: Implement sending email notification
   }

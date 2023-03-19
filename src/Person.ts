@@ -1,67 +1,15 @@
-import { Subject } from "./Subject";
-import { Observer } from "./Observer";
-
-// Define the roles a Person can have
-interface Role {
-  roleName: string;
-  canEdit: boolean;
-  canDelete: boolean;
-}
-
-class ScrumMaster implements Role {
-  roleName = "Scrum Master";
-  canEdit = true;
-  canDelete = true;
-}
-
-class Tester implements Role {
-  roleName = "Tester";
-  canEdit = false;
-  canDelete = false;
-}
-
-class LeadDeveloper implements Role {
-  roleName = "Lead Developer";
-  canEdit = true;
-  canDelete = false;
-}
-
-class Developer implements Role {
-  roleName = "Developer";
-  canEdit = true;
-  canDelete = false;
-}
-
-// Factory class to create Person objects with different roles
-class PersonFactory {
-  createPerson(roleName: string, username: string, notificationMedia: string[]): Person {
-    let role: Role;
-    switch (roleName) {
-      case "Scrum Master":
-        role = new ScrumMaster();
-        break;
-      case "Tester":
-        role = new Tester();
-        break;
-      case "Lead Developer":
-        role = new LeadDeveloper();
-        break;
-      default:
-        role = new Developer();
-        break;
-    }
-    return new Person(username, role, notificationMedia);
-  }
-}
+import { Observer } from "./Observer/Observer";
+import { Subject } from "./Observer/Subject";
+import { Role } from "./Roles/Role";
 
 // Class representing a Person
-class Person implements Subject {
-  private role: Role;
+export class Person<T extends Role> implements Subject {
+  private role: T;
   private notificationMedia: string[];
   private observers: Observer[] = [];
 
   constructor(private username: string, role: Role, notificationMedia: string[]) {
-    this.role = role;
+    this.role = role as T;
     this.notificationMedia = notificationMedia;
   }
 
@@ -69,7 +17,7 @@ class Person implements Subject {
     return this.username;
   }
 
-  getRole(): Role {
+  getRole(): T {
     return this.role;
   }
 
@@ -84,7 +32,7 @@ class Person implements Subject {
   // Notify all observers of a change
   notifyObservers(message: string): void {
     for (const observer of this.observers) {
-      observer.update(this.username, message);
+      observer.update(this, message);
     }
   }
 
@@ -104,12 +52,8 @@ class Person implements Subject {
   // Perform an action that requires notification of observers
   doAction(action: string): void {
     // Perform the action...
-    console.log(`${this.username} (${this.role.roleName}) ${action}`);
-
-    // Notify observers of the action
-    const message = `${this.username} (${this.role.roleName}) ${action}`;
-    this.notifyObservers(message);
+    // console.log(`${this.username} (${this.role.roleName}) ${action}`);
+    this.notifyObservers("Do action");
   }
-}
 
-export { Person, PersonFactory, Role };
+}
