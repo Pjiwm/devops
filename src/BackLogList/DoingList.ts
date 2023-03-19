@@ -11,6 +11,11 @@ export class DoingList implements BacklogList {
         this.name = name;
 
     }
+    contains(item: BacklogItem): boolean {
+        return this.backlogItems.some((backlogItem) => {
+            backlogItem === item;
+        });
+    }
 
     public addBacklogItem(backlogItem: BacklogItem): void {
         this.backlogItems.push(backlogItem);

@@ -23,8 +23,9 @@ const personFactory = new PersonFactory();
 const scrumMaster = personFactory.createPerson(new ScrumMaster(), "scrum-master", ["slack", "email"]);
 const tester = personFactory.createPerson(new Tester(), "tester", ["slack"]);
 const leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "lead-dev", ["email"]);
-const developer = personFactory.createPerson(new LeadDeveloper, "dev", ["slack", "email"]);
-developer.getRole().doLeadDevStuff();
+const developer = personFactory.createPerson(new Developer(), "dev", ["slack", "email"]);
+developer.getRole().doDevStuff();
+leadDeveloper.getRole().doLeadDevStuff();
 
 
 
@@ -67,6 +68,3 @@ let factory = new SprintBacklogFactory();
 let logger = new LogObserver();
 let backlog = factory.create(lists, items);
 backlog.addObserver(logger);
-
-backlog.addBacklogItem(new BacklogItem("Add new feature", "Add new feature to the app", 8));
-backlog.removeBacklogItemById(items[2].getId());
