@@ -1,7 +1,7 @@
 {
-  "name": "cinema-avans",
+  "name": "devops",
   "version": "1.0.0",
-  "description": "Cinema project for software design 3",
+  "description": "Devops project",
   "main": "App.ts",
   "scripts": {
     "build": "tsc",
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/Pjiwm/Cinema-Avans.git"
   },
   "keywords": [
-    "Cinema",
+    "Devops",
     "TS",
     "school"
   ],
@@ -32,6 +32,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "nanoid": "^3.3.4",
     "ts-node": "^10.9.1"
   }
 }
