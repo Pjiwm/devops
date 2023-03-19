@@ -1,6 +1,5 @@
 console.log("test")
 
-import { PersonFactory } from "./Person";
 import { SlackNotifier } from "./Notifiers/SlackNotifier";
 import { EmailNotifier } from "./Notifiers/EmailNotifier";
 import { BacklogItem } from "./BackLogItem";
@@ -9,6 +8,11 @@ import { DoneList } from "./BackLogList/DoneList";
 import { TodoList } from "./BackLogList/TodoList";
 import { SprintBacklogFactory } from "./BackLogFactory/SprintBackLogFactory";
 import { LogObserver } from "./Observer/LogObserver";
+import { PersonFactory } from "./PersonFactory";
+import { Developer } from "./Roles/Developer";
+import { ScrumMaster } from "./Roles/ScrumMaster";
+import { Tester } from "./Roles/Tester";
+import { LeadDeveloper } from "./Roles/LeadDeveloper";
 
 // Example usage
 
@@ -16,10 +20,13 @@ import { LogObserver } from "./Observer/LogObserver";
 const personFactory = new PersonFactory();
 
 // Create some Person objects
-const scrumMaster = personFactory.createPerson("Scrum Master", "scrum-master", ["slack", "email"]);
-const tester = personFactory.createPerson("Tester", "tester", ["slack"]);
-const leadDeveloper = personFactory.createPerson("Lead Developer", "lead-dev", ["email"]);
-const developer = personFactory.createPerson("Developer", "dev", ["slack", "email"]);
+const scrumMaster = personFactory.createPerson(new ScrumMaster(), "scrum-master", ["slack", "email"]);
+const tester = personFactory.createPerson(new Tester(), "tester", ["slack"]);
+const leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "lead-dev", ["email"]);
+const developer = personFactory.createPerson(new LeadDeveloper, "dev", ["slack", "email"]);
+developer.getRole().doLeadDevStuff();
+
+
 
 // Create some observers to receive notifications
 const slackNotifier = new SlackNotifier("my-slack-username");

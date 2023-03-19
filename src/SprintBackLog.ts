@@ -32,19 +32,19 @@ export class SprintBacklog implements Subject {
 
     public setBacklogItems(backlogItems: BacklogItem[]) {
         this.backlogItems = backlogItems;
-        this.notifyObservers();
+        this.notifyObservers("Set backlog items");
     }
 
     public addBacklogItem(backlogItem: BacklogItem): void {
         this.backlogItems.push(backlogItem);
-        this.notifyObservers();
+        this.notifyObservers(`Added backlog item ${backlogItem.getId()}`);
     }
 
     public removeBacklogItem(backlogItem: BacklogItem): void {
         const index = this.backlogItems.indexOf(backlogItem);
         if (index !== -1) {
             this.backlogItems.splice(index, 1);
-            this.notifyObservers();
+            this.notifyObservers(`Removed backlog item ${backlogItem.getId()}`);
         }
     }
 
@@ -53,7 +53,7 @@ export class SprintBacklog implements Subject {
         if (result == -1) {
             throw new Error('BacklogItem not found');
         } else {
-            this.notifyObservers();
+            this.notifyObservers(`Removed backlog item by id ${id}`);
             return this.backlogItems.splice(result, 1)[0];
         }
 
@@ -70,9 +70,9 @@ export class SprintBacklog implements Subject {
         }
     }
 
-    public notifyObservers(): void {
+    public notifyObservers(message: string): void {
         for (const observer of this.observers) {
-            observer.update(this);
+            observer.update(this, message);
         }
     }
 

@@ -1,8 +1,9 @@
 import { nanoid } from "nanoid";
 import { Observer } from "./Observer/Observer";
+import { Subject } from "./Observer/Subject";
 
 // BacklogItem class (Subject)
-export class BacklogItem {
+export class BacklogItem implements Subject {
     private title: string;
     private description: string;
     private storyPoints: number;
@@ -27,7 +28,7 @@ export class BacklogItem {
 
     public setTitle(title: string) {
         this.title = title;
-        this.notifyObservers();
+        this.notifyObservers("Changed title");
     }
 
     public getStoryPoints(): number {
@@ -44,7 +45,7 @@ export class BacklogItem {
 
     public setDescription(description: string) {
         this.description = description;
-        this.notifyObservers();
+        this.notifyObservers("Changed description");
     }
 
     public addObserver(observer: Observer): void {
@@ -58,13 +59,13 @@ export class BacklogItem {
         }
     }
 
-    public notifyObservers(): void {
+    public notifyObservers(message: string): void {
         for (const observer of this.observers) {
-            observer.update(this);
+            observer.update(this, message);
         }
     }
 
     public toString(): string {
-        return `BacklogItem: ${this.title} - ${this.description} - ${this.storyPoints}`;
+        return `[BacklogItem-${this.id}]: ${this.title} - ${this.description} - ${this.storyPoints}`;
     }
 }
