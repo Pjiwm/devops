@@ -9,7 +9,6 @@ import { SprintBacklog } from '../SprintBackLog';
 import { State } from './SprintState';
 import { CreatedState } from "./CreatedState";
 import { SprintType } from './Type';
-// import { SprintType } from './SprintType';
 
 export class Sprint implements Subject {
     private members: Person<Role>[];
@@ -19,7 +18,7 @@ export class Sprint implements Subject {
     private state: State;
     private observers: Observer[] = [];
     private name: string;
-    readonly id: string;
+    private id: string;
     readonly sprintType: SprintType;
 
     constructor(members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
@@ -63,6 +62,10 @@ export class Sprint implements Subject {
 
     getId(): string {
         return this.id;
+    }
+
+    setId(id: string): void {
+        this.id = id;
     }
 
     setStartDate(startDate: Date): void {
