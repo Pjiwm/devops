@@ -14,6 +14,9 @@ import { ScrumMaster } from "./Roles/ScrumMaster";
 import { Tester } from "./Roles/Tester";
 import { LeadDeveloper } from "./Roles/LeadDeveloper";
 import { Repository } from "./Repository";
+import { Sprint } from "./sprint/Sprint";
+import { SprintBacklog } from "./SprintBackLog";
+import { SprintType } from "./sprint/Type";
 
 // Example usage
 
@@ -25,7 +28,7 @@ const scrumMaster = personFactory.createPerson(new ScrumMaster(), "scrum-master"
 const tester = personFactory.createPerson(new Tester(), "tester", ["slack"]);
 const leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "lead-dev", ["email"]);
 const developer = personFactory.createPerson(new LeadDeveloper, "dev", ["slack", "email"]);
-developer.getRole().doLeadDevStuff();
+developer.roleActions().doLeadDevStuff();
 
 
 
@@ -64,11 +67,14 @@ let items = [
     new BacklogItem("Fix stackoverflow in main.ts", "Stack overflow help???", 12),
 ];
 
-let factory = new SprintBacklogFactory();
-let logger = new LogObserver();
-let repo = new Repository("Master");
-let backlog = factory.create(lists, items, repo);
-backlog.addObserver(logger);
-
-backlog.addBacklogItem(new BacklogItem("Add new feature", "Add new feature to the app", 8));
-backlog.removeBacklogItemById(items[2].getId());
+let sprint = scrumMaster.roleActions().createSprint()
+    .addStartDate(new Date("2023-09-01"))
+    .addEndDate(new Date("2023-09-21"))
+    .addName("Release: Stable videogame")
+    .addMembers([developer, leadDeveloper, scrumMaster, tester])
+    .addType(SprintType.Release)
+    .addSprintBackLog(new SprintBacklogFactory().create(lists, items, new Repository("Project", "Master")))
+    .build();
+let logObserver = new LogObserver();
+sprint.addObserver(logObserver);
+sprint.start();

@@ -17,7 +17,7 @@ export class Person<T extends Role> implements Subject {
     return this.username;
   }
 
-  getRole(): T {
+  roleActions(): T {
     return this.role;
   }
 

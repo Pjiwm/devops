@@ -1,12 +1,14 @@
 import { Branch } from "./Branch";
 
 export class Repository {
-    branches: Branch[];
-    master: Branch;
+    private name: string
+    private branches: Branch[];
+    private master: Branch;
 
-    constructor(masterBranchName: string) {
+    constructor(name: string, masterBranchName: string) {
         this.master = new Branch(masterBranchName);
         this.branches = [this.master];
+        this.name = name;
     }
 
     public addBranch(branchName: string): void {
@@ -23,6 +25,10 @@ export class Repository {
 
     public getBranch(branchName: string): Branch | undefined {
         return this.branches.find(branch => branch.getName() === branchName);
+    }
+
+    public getName(): string {
+        return this.name;
     }
 
     public deleteBranch(branchName: string): void {

@@ -8,6 +8,7 @@ import { Role } from '../Roles/Role';
 import { SprintBacklog } from '../SprintBackLog';
 import { State } from './SprintState';
 import { CreatedState } from "./CreatedState";
+import { SprintType } from './Type';
 
 export class Sprint implements Subject {
     private members: Person<Role>[];
@@ -18,8 +19,9 @@ export class Sprint implements Subject {
     private observers: Observer[] = [];
     private name: string;
     private id: string;
+    readonly sprintType: SprintType;
 
-    constructor(members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string) {
+    constructor(members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
         this.members = members;
         this.backlog = backlog;
         this.startDate = startDate;
@@ -27,6 +29,7 @@ export class Sprint implements Subject {
         this.state = new CreatedState();
         this.name = name;
         this.id = nanoid();
+        this.sprintType = type;
     }
 
     getMembers(): Person<Role>[] {
@@ -59,6 +62,10 @@ export class Sprint implements Subject {
 
     getId(): string {
         return this.id;
+    }
+
+    setId(id: string): void {
+        this.id = id;
     }
 
     setStartDate(startDate: Date): void {
