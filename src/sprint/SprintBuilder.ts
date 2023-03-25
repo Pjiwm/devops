@@ -3,6 +3,7 @@ import { SprintBacklogFactory } from "../BackLogFactory/SprintBackLogFactory";
 import { Person } from "../Person";
 import { Repository } from "../Repository";
 import { Role } from "../Roles/Role";
+import { ScrumMaster } from "../Roles/ScrumMaster";
 import { SprintBacklog } from "../SprintBackLog";
 import { Sprint } from "./Sprint";
 import { SprintType } from "./Type";
@@ -14,8 +15,10 @@ export class SprintBuilder {
     private name: string | undefined;
     private type: SprintType | undefined;
     private members: Person<Role>[] | undefined;
+    private scrumMaster: Person<ScrumMaster>;
 
-    constructor() {
+    constructor(scrumMaster: Person<ScrumMaster>) {
+        this.scrumMaster = scrumMaster;
     }
 
     public addSprintBackLog(sprintBacklog: SprintBacklog): SprintBuilder {
@@ -60,7 +63,7 @@ export class SprintBuilder {
         let id = nanoid();
         if (this.sprintBacklog === undefined) {
             this.sprintBacklog = new SprintBacklogFactory()
-            .create([], [], new Repository("Repository-" + id, "Master"));
+                .create([], [], new Repository("Repository-" + id, "Master"));
         }
         if (this.startDate === undefined) {
             this.startDate = new Date();
@@ -80,7 +83,7 @@ export class SprintBuilder {
             this.members = [];
         }
         let sprint =
-            new Sprint(this.members, this.sprintBacklog, this.startDate, this.endDate, this.name, this.type);
+            new Sprint(this.scrumMaster, this.members, this.sprintBacklog, this.startDate, this.endDate, this.name, this.type);
         sprint.setId(id);
         return sprint;
     }
