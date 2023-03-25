@@ -14,6 +14,9 @@ import { ScrumMaster } from "./Roles/ScrumMaster";
 import { Tester } from "./Roles/Tester";
 import { LeadDeveloper } from "./Roles/LeadDeveloper";
 import { Repository } from "./Repository";
+import { Sprint } from "./sprint/Sprint";
+import { SprintBacklog } from "./SprintBackLog";
+import { SprintType } from "./sprint/Type";
 
 // Example usage
 
@@ -66,9 +69,14 @@ let items = [
 
 let factory = new SprintBacklogFactory();
 let logger = new LogObserver();
-let repo = new Repository("Master");
+let repo = new Repository("Project", "Master");
 let backlog = factory.create(lists, items, repo);
 backlog.addObserver(logger);
 
 backlog.addBacklogItem(new BacklogItem("Add new feature", "Add new feature to the app", 8));
 backlog.removeBacklogItemById(items[2].getId());
+
+// Sprint
+let devs = [developer, leadDeveloper, scrumMaster, tester];
+let someSprint = new Sprint(devs, backlog, new Date("2023-08-06"), new Date("2023-09-06"), "Project sprint", SprintType.Release);
+console.log(someSprint.getName());
