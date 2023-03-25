@@ -76,7 +76,6 @@ export class Sprint implements Subject {
         return undefined;
     }
 
-
     // Notify all observers of a change
     notifyObservers(message: string): void {
         for (const observer of this.observers) {

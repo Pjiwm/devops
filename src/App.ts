@@ -1,7 +1,7 @@
 console.log("test")
 
-import { SlackNotifier } from "./Notifiers/SlackNotifier";
-import { EmailNotifier } from "./Notifiers/EmailNotifier";
+import { SlackNotifier } from "./Observer/SlackNotifier";
+import { EmailNotifier } from "./Observer/EmailNotifier";
 import { BacklogItem } from "./BackLogItem";
 import { DoingList } from "./BackLogList/DoingList";
 import { DoneList } from "./BackLogList/DoneList";

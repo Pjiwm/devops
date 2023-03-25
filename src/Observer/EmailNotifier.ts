@@ -1,7 +1,7 @@
 // import { Observer } from "../Observer";
 
-import { Observer } from "../Observer/Observer";
-import { Subject } from "../Observer/Subject";
+import { Observer } from "./Observer";
+import { Subject } from "./Subject";
 
 
 // Concrete observer class for sending notifications via email

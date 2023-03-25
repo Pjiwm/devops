@@ -5,4 +5,5 @@ export interface BacklogList {
     addBacklogItem(backlogItem: BacklogItem): void;
     removeBacklogItem(backlogItem: BacklogItem): void;
     getName(): string;
+    contains(backlogItem: BacklogItem): boolean
 }
