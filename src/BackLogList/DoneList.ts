@@ -11,7 +11,8 @@ export class DoneList implements BacklogList {
         this.name = name;
     }
     contains(backlogItem: BacklogItem): boolean {
-        throw new Error("Method not implemented.");
+        return this.backlogItems.includes(backlogItem);
+
     }
 
     public addBacklogItem(backlogItem: BacklogItem): void {

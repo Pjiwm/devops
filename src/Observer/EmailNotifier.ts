@@ -1,5 +1,3 @@
-// import { Observer } from "../Observer";
-
 import { Observer } from "./Observer";
 import { Subject } from "./Subject";
 

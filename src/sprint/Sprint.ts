@@ -17,6 +17,7 @@ export class Sprint implements Subject {
     private state: State;
     private observers: Observer[] = [];
     private name: string;
+    private id: string;
 
     constructor(members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string) {
         this.members = members;
@@ -25,6 +26,7 @@ export class Sprint implements Subject {
         this.endDate = endDate;
         this.state = new CreatedState();
         this.name = name;
+        this.id = nanoid();
     }
 
     getMembers(): Person<Role>[] {
@@ -49,6 +51,14 @@ export class Sprint implements Subject {
 
     getState(): State {
         return this.state;
+    }
+
+    getName(): string {
+        return this.name;
+    }
+
+    getId(): string {
+        return this.id;
     }
 
     setStartDate(startDate: Date): void {
@@ -121,5 +131,4 @@ export class Sprint implements Subject {
         this.state.changeBacklogItemPosition(this, item, sourceList, destinationList);
     }
 
-    // getters and setters for name and state
 }
