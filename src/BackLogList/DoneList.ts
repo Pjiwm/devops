@@ -10,6 +10,10 @@ export class DoneList implements BacklogList {
         this.backlogItems = [];
         this.name = name;
     }
+    contains(backlogItem: BacklogItem): boolean {
+        return this.backlogItems.includes(backlogItem);
+
+    }
 
     public addBacklogItem(backlogItem: BacklogItem): void {
         this.backlogItems.push(backlogItem);

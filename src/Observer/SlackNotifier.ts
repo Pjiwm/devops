@@ -1,5 +1,5 @@
-import { Observer } from "../Observer/Observer";
-import { Subject } from "../Observer/Subject";
+import { Observer } from "./Observer";
+import { Subject } from "./Subject";
 import { Person } from "../Person";
 
 // Concrete observer class for sending notifications via Slack

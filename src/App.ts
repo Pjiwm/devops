@@ -1,7 +1,7 @@
 console.log("test")
 
-import { SlackNotifier } from "./Notifiers/SlackNotifier";
-import { EmailNotifier } from "./Notifiers/EmailNotifier";
+import { SlackNotifier } from "./Observer/SlackNotifier";
+import { EmailNotifier } from "./Observer/EmailNotifier";
 import { BacklogItem } from "./BackLogItem";
 import { DoingList } from "./BackLogList/DoingList";
 import { DoneList } from "./BackLogList/DoneList";
@@ -13,6 +13,7 @@ import { Developer } from "./Roles/Developer";
 import { ScrumMaster } from "./Roles/ScrumMaster";
 import { Tester } from "./Roles/Tester";
 import { LeadDeveloper } from "./Roles/LeadDeveloper";
+import { Repository } from "./Repository";
 
 // Example usage
 
@@ -65,7 +66,8 @@ let items = [
 
 let factory = new SprintBacklogFactory();
 let logger = new LogObserver();
-let backlog = factory.create(lists, items);
+let repo = new Repository("Master");
+let backlog = factory.create(lists, items, repo);
 backlog.addObserver(logger);
 
 backlog.addBacklogItem(new BacklogItem("Add new feature", "Add new feature to the app", 8));

@@ -3,6 +3,7 @@ import { BacklogItem } from './BackLogItem'
 import { BacklogList } from './BackLogList/BackLogList';
 import { Observer } from './Observer/Observer';
 import { Subject } from './Observer/Subject';
+import { Repository } from './Repository';
 
 // SprintBacklog class (Context)
 export class SprintBacklog implements Subject {
@@ -10,12 +11,14 @@ export class SprintBacklog implements Subject {
     private backlogItems: BacklogItem[];
     private observers: Observer[];
     private id: string;
+    private repostiory: Repository;
 
-    constructor(backlogLists: BacklogList[]) {
+    constructor(backlogLists: BacklogList[], repository: Repository) {
         this.backlogLists = backlogLists;
         this.backlogItems = [];
         this.observers = [];
         this.id = nanoid();
+        this.repostiory = repository;
     }
 
     public getId(): string {
@@ -24,6 +27,10 @@ export class SprintBacklog implements Subject {
 
     public getBacklogLists(): BacklogList[] {
         return this.backlogLists;
+    }
+
+    public getRepository(): Repository {
+        return this.repostiory;
     }
 
     public getBacklogItems(): BacklogItem[] {

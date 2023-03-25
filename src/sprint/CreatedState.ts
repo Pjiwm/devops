@@ -27,12 +27,12 @@ export class CreatedState implements State {
     }
 
     addBacklogItem(sprint: Sprint, item: BacklogItem): void {
-        sprint.getBacklog().add(item);
+        sprint.addBacklogItem(item);
         sprint.notifyObservers('Backlog item added');
     }
 
     removeBacklogItem(sprint: Sprint, item: BacklogItem): void {
-        sprint.getBacklog().remove(item);
+        sprint.addBacklogItem(item);
         sprint.notifyObservers('Backlog item removed');
     }
 

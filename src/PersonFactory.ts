@@ -19,7 +19,3 @@ export class PersonFactory {
         }
     }
 }
-
-// export class PersonFactory {
-
-// }
