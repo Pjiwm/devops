@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { ActivityMap } from "./ActivityMap";
 import { Observer } from "./Observer/Observer";
 import { Subject } from "./Observer/Subject";
 
@@ -9,6 +10,7 @@ export class BacklogItem implements Subject {
     private storyPoints: number;
     private observers: Observer[];
     private id: string
+    private activities: ActivityMap;
 
     constructor(title: string, description: string, storyPoints: number) {
         this.title = title;
@@ -16,6 +18,7 @@ export class BacklogItem implements Subject {
         this.observers = [];
         this.storyPoints = storyPoints;
         this.id = nanoid();
+        this.activities = new ActivityMap();
     }
 
     public getId(): string {
@@ -46,6 +49,10 @@ export class BacklogItem implements Subject {
     public setDescription(description: string) {
         this.description = description;
         this.notifyObservers("Changed description");
+    }
+
+    public getActivities(): ActivityMap {
+        return this.activities;
     }
 
     public addObserver(observer: Observer): void {
