@@ -17,6 +17,7 @@ import { Repository } from "./Repository";
 import { Sprint } from "./sprint/Sprint";
 import { SprintBacklog } from "./SprintBackLog";
 import { SprintType } from "./sprint/Type";
+import { SprintLogObserver } from "./Observer/SprintLogObserver";
 
 // Example usage
 
@@ -67,7 +68,7 @@ let items = [
     new BacklogItem("Fix stackoverflow in main.ts", "Stack overflow help???", 12),
 ];
 
-let sprint = scrumMaster.roleActions().createSprint()
+let sprint = scrumMaster.roleActions().createSprint(scrumMaster)
     .addStartDate(new Date("2023-09-01"))
     .addEndDate(new Date("2023-09-21"))
     .addName("Release: Stable videogame")
@@ -75,6 +76,10 @@ let sprint = scrumMaster.roleActions().createSprint()
     .addType(SprintType.Release)
     .addSprintBackLog(new SprintBacklogFactory().create(lists, items, new Repository("Project", "Master")))
     .build();
-let logObserver = new LogObserver();
+
+let logObserver = new SprintLogObserver();
 sprint.addObserver(logObserver);
+
 sprint.start();
+
+sprint.addBacklogItem(new BacklogItem("Fix bug", "Fix bug in main.ts", 8));
