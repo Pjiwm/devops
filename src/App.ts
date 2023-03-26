@@ -42,16 +42,11 @@ developer.addObserver(slackNotifier);
 developer.addObserver(emailNotifier);
 
 // Perform some actions that require notification
-scrumMaster.doAction("created a new user story");
-tester.doAction("reported a bug");
-leadDeveloper.doAction("approved a pull request");
-developer.doAction("committed changes");
 
 // Change the notification media for a Person
 developer.setNotificationMedia(["email"]);
 
 // Perform another action that requires notification
-developer.doAction("requested a code review");
 // BackLog
 let doingList = new DoingList("Doing right now");
 let doneList = new DoneList("Done");

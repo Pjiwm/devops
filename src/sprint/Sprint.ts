@@ -123,8 +123,17 @@ export class Sprint implements Subject {
         this.state.addBacklogItem(this, item);
     }
 
+    swapDeveloper(item: BacklogItem, developer: Person<Role>): void {
+        // TODO check if developer is in sprint
+        item.swapAssignee(developer);
+    }
+
     removeBacklogItem(item: BacklogItem): void {
         this.state.removeBacklogItem(this, item);
+    }
+
+    getBackLogLists(): BacklogList[] {
+        return this.backlog.getBacklogLists();
     }
 
     changeBacklogItemPosition(item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {

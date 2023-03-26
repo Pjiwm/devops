@@ -2,6 +2,8 @@ import { nanoid } from "nanoid";
 import { ActivityMap } from "./ActivityMap";
 import { Observer } from "./Observer/Observer";
 import { Subject } from "./Observer/Subject";
+import { Person } from "./Person";
+import { Role } from "./Roles/Role";
 
 // BacklogItem class (Subject)
 export class BacklogItem implements Subject {
@@ -11,6 +13,7 @@ export class BacklogItem implements Subject {
     private observers: Observer[];
     private id: string
     private activities: ActivityMap;
+    private assignee: Person<Role> | undefined;
 
     constructor(title: string, description: string, storyPoints: number) {
         this.title = title;
@@ -57,6 +60,30 @@ export class BacklogItem implements Subject {
 
     public addObserver(observer: Observer): void {
         this.observers.push(observer);
+    }
+
+    public getAssignee(): Person<Role> | undefined {
+        return this.assignee;
+    }
+
+    public setAssignee(assignee: Person<Role>): void {
+        this.assignee = assignee;
+        this.notifyObservers("Set assignee");
+    }
+
+    public swapAssignee(assignee: Person<Role>): void {
+        this.assignee = assignee;
+        this.notifyObservers("Swapped assignee");
+    }
+
+    public addActivity(activity: string): void {
+        this.activities.addActivity(activity);
+        this.notifyObservers("Added activity");
+    }
+
+    public setActivity(acitivty: string, checked: boolean): void {
+        this.activities.setActivity(acitivty, checked);
+        this.notifyObservers("Set activity");
     }
 
     public removeObserver(observer: Observer): void {

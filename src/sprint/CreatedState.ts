@@ -15,7 +15,7 @@ export class CreatedState implements State {
         throw new Error("Method not implemented.");
     }
     changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {
-        throw new Error("Method not implemented.");
+        sprint.notifyObservers("Method not implemented.");
     }
     start(sprint: Sprint): void {
         sprint.setState(new ActivatedState());

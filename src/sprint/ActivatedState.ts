@@ -47,8 +47,9 @@ export class ActivatedState implements State {
 
     changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {
         if (destinationList !== sprint.getTodoList()) {
-            throw new Error("Cannot move backlog items from/to the Todo list in an activated sprint.");
+            sprint.notifyObservers("Cannot move backlog items from/to the Todo list in an activated sprint.");
         }
+
         if (sourceList !== destinationList) {
             sourceList.removeBacklogItem(item);
             destinationList.addBacklogItem(item);
