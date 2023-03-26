@@ -15,7 +15,7 @@ export class Sprint implements Subject {
     private members: Person<Role>[];
     private backlog: SprintBacklog;
     private startDate: Date;
-    private endDate: Date;
+    protected endDate: Date;
     private state: State;
     private observers: Observer[] = [];
     private name: string;
@@ -138,7 +138,6 @@ export class Sprint implements Subject {
     }
 
     swapDeveloper(item: BacklogItem, developer: Person<Role>): void {
-        // TODO check if developer is in sprint
         item.swapAssignee(this, developer);
     }
 
