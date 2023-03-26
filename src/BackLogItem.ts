@@ -4,6 +4,7 @@ import { Observer } from "./Observer/Observer";
 import { Subject } from "./Observer/Subject";
 import { Person } from "./Person";
 import { Role } from "./Roles/Role";
+import { Sprint } from "./sprint/Sprint";
 
 // BacklogItem class (Subject)
 export class BacklogItem implements Subject {
@@ -71,9 +72,13 @@ export class BacklogItem implements Subject {
         this.notifyObservers("Set assignee");
     }
 
-    public swapAssignee(assignee: Person<Role>): void {
+    public swapAssignee(sprint: Sprint, assignee: Person<Role>): void {
+        let currentAssignee = this.assignee?.getUsername();
         this.assignee = assignee;
+        let msg = `Backlog Item update: ${currentAssignee} has been swapped with ${assignee.getUsername()}`
         this.notifyObservers("Swapped assignee");
+        sprint.getScrumMaster()
+            .notifyObservers(msg + `for ${this.title} in sprint ${sprint.getId()}`);
     }
 
     public addActivity(activity: string): void {

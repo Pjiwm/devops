@@ -23,7 +23,7 @@ export class CreatedState implements State {
     }
 
     finish(sprint: Sprint): void {
-        console.log('Cannot finish a sprint that has not been started yet');
+        sprint.notifyObservers('Cannot finish a sprint that has not been started yet');
     }
 
     addBacklogItem(sprint: Sprint, item: BacklogItem): void {
