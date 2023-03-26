@@ -80,6 +80,7 @@ let sprint = scrumMaster.roleActions().createSprint(scrumMaster)
 let logObserver = new SprintLogObserver();
 sprint.addObserver(logObserver);
 
-sprint.start();
+sprint.setName("hoi")
+sprint.start(scrumMaster);
 
 sprint.addBacklogItem(new BacklogItem("Fix bug", "Fix bug in main.ts", 8));

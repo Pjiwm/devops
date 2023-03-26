@@ -35,6 +35,10 @@ export class Sprint implements Subject {
         this.scrumMaster = scrumMaster;
     }
 
+    getScrumMaster(): Person<Role> {
+        return this.scrumMaster;
+    }
+
     getMembers(): Person<Role>[] {
         return this.members;
     }
@@ -72,15 +76,15 @@ export class Sprint implements Subject {
     }
 
     setStartDate(startDate: Date): void {
-        this.startDate = startDate;
+        this.state.setStartDate(this, startDate);
     }
 
     setEndDate(endDate: Date): void {
-        this.endDate = endDate;
+        this.state.setEndDate(this, endDate);
     }
 
     setName(name: string): void {
-        this.name = name;
+        this.name = this.state.setName(this, name);
     }
 
     setState(state: State): void {
@@ -121,8 +125,12 @@ export class Sprint implements Subject {
         this.notifyObservers(`Sprint: ${action}`);
     }
 
-    start(): void {
-        this.state.start(this);
+    start(person: Person<Role>): void {
+        if(person === this.getScrumMaster()) {
+            this.state.start(this);
+        } else {
+            this.notifyObservers(`A sprint can only be started by a scrum master`);
+        }
     }
 
     finish(): void {

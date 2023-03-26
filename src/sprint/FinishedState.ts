@@ -4,6 +4,16 @@ import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
 
 export class FinishedState implements State {
+    setName(sprint: Sprint, name: string): string {
+        sprint.notifyObservers("Cannot set name in a finshed sprint.");
+        return sprint.getName();
+    }
+    setStartDate(sprint: Sprint, startDate: Date): void {
+        sprint.notifyObservers("Cannot set start date in a finshed sprint.");
+    }
+    setEndDate(sprint: Sprint, endDate: Date): void {
+        sprint.notifyObservers("Cannot set end date in a finshed sprint.");;
+    }
     addBacklogItem(sprint: Sprint, item: BacklogItem): void {
         sprint.notifyObservers("Cannot add backlog item to a finished sprint.");
     }
