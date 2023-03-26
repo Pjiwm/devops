@@ -15,7 +15,7 @@ export class Sprint implements Subject {
     private members: Person<Role>[];
     private backlog: SprintBacklog;
     private startDate: Date;
-    private endDate: Date;
+    protected endDate: Date;
     private state: State;
     private observers: Observer[] = [];
     private name: string;
@@ -33,6 +33,10 @@ export class Sprint implements Subject {
         this.id = nanoid();
         this.sprintType = type;
         this.scrumMaster = scrumMaster;
+    }
+
+    getScrumMaster(): Person<ScrumMaster> {
+        return this.scrumMaster;
     }
 
     getMembers(): Person<Role>[] {
@@ -133,8 +137,16 @@ export class Sprint implements Subject {
         this.state.addBacklogItem(this, item);
     }
 
+    swapDeveloper(item: BacklogItem, developer: Person<Role>): void {
+        item.swapAssignee(this, developer);
+    }
+
     removeBacklogItem(item: BacklogItem): void {
         this.state.removeBacklogItem(this, item);
+    }
+
+    getBackLogLists(): BacklogList[] {
+        return this.backlog.getBacklogLists();
     }
 
     changeBacklogItemPosition(item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {

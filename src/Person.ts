@@ -48,12 +48,4 @@ export class Person<T extends Role> implements Subject {
       this.observers.splice(index, 1);
     }
   }
-
-  // Perform an action that requires notification of observers
-  doAction(action: string): void {
-    // Perform the action...
-    // console.log(`${this.username} (${this.role.roleName}) ${action}`);
-    this.notifyObservers("Do action");
-  }
-
 }

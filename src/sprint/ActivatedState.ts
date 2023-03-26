@@ -49,6 +49,7 @@ export class ActivatedState implements State {
         if (destinationList !== sprint.getTodoList()) {
             sprint.notifyObservers("Cannot change backlog item position in an activated sprint.");
         }
+
         if (sourceList !== destinationList) {
             sourceList.removeBacklogItem(item);
             destinationList.addBacklogItem(item);
