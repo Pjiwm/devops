@@ -10,11 +10,13 @@ export class ActivatedState implements State {
         sprint.notifyObservers("Cannot set name in an activated sprint.");
         return sprint.getName();
     }
-    setStartDate(sprint: Sprint, startDate: Date): void {
+    setStartDate(sprint: Sprint, startDate: Date): Date {
         sprint.notifyObservers("Cannot set start date in an activated sprint.");
+        return sprint.getStartDate();
     }
-    setEndDate(sprint: Sprint, endDate: Date): void {
+    setEndDate(sprint: Sprint, endDate: Date): Date {
         sprint.notifyObservers("Cannot set end date in an activated sprint.");
+        return sprint.getEndDate();
     }
     addBacklogItem(sprint: Sprint, item: BacklogItem): void {
         sprint.notifyObservers("Cannot add backlog item in an activated sprint.");

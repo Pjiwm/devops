@@ -10,14 +10,14 @@ export class CreatedState implements State {
         return name;
     }
 
-    setStartDate(sprint: Sprint, startDate: Date): void {
-        sprint.setStartDate(startDate);
+    setStartDate(sprint: Sprint, startDate: Date): Date {
         sprint.notifyObservers('Sprint start date updated');
+        return startDate
     }
 
-    setEndDate(sprint: Sprint, endDate: Date): void {
-        sprint.setEndDate(endDate);
+    setEndDate(sprint: Sprint, endDate: Date): Date {
         sprint.notifyObservers('Sprint end date updated');
+        return endDate
     }
     
     moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: BacklogList): void {

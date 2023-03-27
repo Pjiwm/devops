@@ -7,8 +7,8 @@ interface State {
     removeBacklogItem(sprint: Sprint, item: BacklogItem): void;
     moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: BacklogList): void;
     setName(sprint: Sprint, name: string): string;
-    setStartDate(sprint: Sprint, startDate: Date): void;
-    setEndDate(sprint: Sprint, endDate: Date): void;
+    setStartDate(sprint: Sprint, startDate: Date): Date;
+    setEndDate(sprint: Sprint, endDate: Date): Date;
     closeSprint(sprint: Sprint): void;
     finishSprint(sprint: Sprint, currentDate: Date): void;
     start(sprint: Sprint): void;
