@@ -12,6 +12,7 @@ import { SprintType } from './Type';
 import { ScrumMaster } from '../Roles/ScrumMaster';
 
 export class Sprint implements Subject {
+
     private members: Person<Role>[];
     private backlog: SprintBacklog;
     private startDate: Date;
@@ -76,15 +77,15 @@ export class Sprint implements Subject {
     }
 
     setStartDate(startDate: Date): void {
-        this.startDate = startDate;
+        this.state.setStartDate(this, startDate);
     }
 
     setEndDate(endDate: Date): void {
-        this.endDate = endDate;
+        this.state.setEndDate(this, endDate);
     }
 
     setName(name: string): void {
-        this.name = name;
+        this.state.setName(this, name);
     }
 
     setState(state: State): void {
@@ -125,8 +126,12 @@ export class Sprint implements Subject {
         this.notifyObservers(`Sprint: ${action}`);
     }
 
-    start(): void {
-        this.state.start(this);
+    start(person: Person<Role>): void {
+        if(person === this.getScrumMaster()) {
+            this.state.start(this);
+        } else {
+            this.notifyObservers(`A sprint can only be started by a scrum master`);
+        }
     }
 
     finish(): void {

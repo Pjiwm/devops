@@ -72,9 +72,12 @@ let sprint = scrumMaster.roleActions().createSprint(scrumMaster)
     .addSprintBackLog(new SprintBacklogFactory().create(lists, items, new Repository("Project", "Master")))
     .build();
 
+
 let logObserver = new SprintLogObserver();
 sprint.addObserver(logObserver);
+// sprint.addBacklogItem(new BacklogItem("Fix bug", "Fix bug in main.ts", 8));
 
-sprint.start();
 
-sprint.addBacklogItem(new BacklogItem("Fix bug", "Fix bug in main.ts", 8));
+sprint.start(scrumMaster);
+sprint.setName("hoi")
+

@@ -4,6 +4,15 @@ import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
 
 class ClosedState implements State {
+    setName(sprint: Sprint, name: string): void {
+        sprint.notifyObservers("Cannot set name in a closed sprint.");
+    }
+    setStartDate(sprint: Sprint, startDate: Date): void {
+        sprint.notifyObservers("Cannot set start date in a closed sprint.");
+    }
+    setEndDate(sprint: Sprint, endDate: Date): void {
+        sprint.notifyObservers("Cannot set end date in a closed sprint.");
+    }
     addBacklogItem(sprint: Sprint, item: BacklogItem): void {
         sprint.notifyObservers("Cannot add backlog item to closed sprint.");
     }
