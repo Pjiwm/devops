@@ -8,14 +8,12 @@ import { Repository } from './Repository';
 // SprintBacklog class (Context)
 export class SprintBacklog implements Subject {
     private backlogLists: BacklogList[];
-    private backlogItems: BacklogItem[];
     private observers: Observer[];
     private id: string;
     private repostiory: Repository;
 
     constructor(backlogLists: BacklogList[], repository: Repository) {
         this.backlogLists = backlogLists;
-        this.backlogItems = [];
         this.observers = [];
         this.id = nanoid();
         this.repostiory = repository;
@@ -31,39 +29,6 @@ export class SprintBacklog implements Subject {
 
     public getRepository(): Repository {
         return this.repostiory;
-    }
-
-    public getBacklogItems(): BacklogItem[] {
-        return this.backlogItems;
-    }
-
-    public setBacklogItems(backlogItems: BacklogItem[]) {
-        this.backlogItems = backlogItems;
-        this.notifyObservers("Set backlog items");
-    }
-
-    public addBacklogItem(backlogItem: BacklogItem): void {
-        this.backlogItems.push(backlogItem);
-        this.notifyObservers(`Added backlog item ${backlogItem.getId()}`);
-    }
-
-    public removeBacklogItem(backlogItem: BacklogItem): void {
-        const index = this.backlogItems.indexOf(backlogItem);
-        if (index !== -1) {
-            this.backlogItems.splice(index, 1);
-            this.notifyObservers(`Removed backlog item ${backlogItem.getId()}`);
-        }
-    }
-
-    public removeBacklogItemById(id: string): BacklogItem {
-        let result = this.backlogItems.findIndex((item) => item.getId() == id);
-        if (result == -1) {
-            throw new Error('BacklogItem not found');
-        } else {
-            this.notifyObservers(`Removed backlog item by id ${id}`);
-            return this.backlogItems.splice(result, 1)[0];
-        }
-
     }
 
     public addObserver(observer: Observer): void {

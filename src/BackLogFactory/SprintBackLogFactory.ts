@@ -1,15 +1,18 @@
-import { BacklogItem } from "../BackLogItem";
 import { BacklogList } from "../BackLogList/BackLogList";
+import { TodoList } from "../BackLogList/TodoList";
 import { Repository } from "../Repository";
 import { SprintBacklog } from "../SprintBackLog";
 
 export class SprintBacklogFactory implements SprintBacklogFactory {
-    create(backlogLists: BacklogList[], backlogItems: BacklogItem[], repository: Repository): SprintBacklog {
-        let backlog = new SprintBacklog(backlogLists, repository);
+    create(extraLists: BacklogList[], repository: Repository): SprintBacklog {
+        let lists = new Array<BacklogList>();
+        lists.push(new TodoList("Todo"));
+        lists.push(new TodoList("Doing"));
+        lists.concat(extraLists);
+        lists.push(new TodoList("Done"));
 
-        for (let item of backlogItems) {
-            backlog.addBacklogItem(item);
-        }
-        return backlog;
+        return new SprintBacklog(lists, repository);
+
     }
+
 }

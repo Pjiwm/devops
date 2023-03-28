@@ -2,20 +2,21 @@ import { BacklogItem } from "../BackLogItem";
 import { BacklogList } from "../BackLogList/BackLogList";
 import { FinishedState } from "./FinishedState";
 import { Sprint } from "./Sprint";
+import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
 
 export class ActivatedState implements State {
 
-    setName(sprint: Sprint, name: string): void {
+    setName(sprint: Sprint, props: SprintProperties, name: string): void {
         sprint.notifyObservers("Cannot set name in an activated sprint.");
     }
-    setStartDate(sprint: Sprint, startDate: Date): void {
+    setStartDate(sprint: Sprint, props: SprintProperties, startDate: Date): void {
         sprint.notifyObservers("Cannot set start date in an activated sprint.");
     }
-    setEndDate(sprint: Sprint, endDate: Date): void {
+    setEndDate(sprint: Sprint, props: SprintProperties, endDate: Date): void {
         sprint.notifyObservers("Cannot set end date in an activated sprint.");
     }
-    addBacklogItem(sprint: Sprint, item: BacklogItem): void {
+    addBacklogItem(sprint: Sprint, todoList: BacklogList,  item: BacklogItem): void {
         sprint.notifyObservers("Cannot add backlog item in an activated sprint.");
     }
 

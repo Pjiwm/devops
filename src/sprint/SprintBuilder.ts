@@ -63,7 +63,7 @@ export class SprintBuilder {
         let id = nanoid();
         if (this.sprintBacklog === undefined) {
             this.sprintBacklog = new SprintBacklogFactory()
-                .create([], [], new Repository("Repository-" + id, "Master"));
+                .create([], new Repository("Repository-" + id, "Master"));
         }
         if (this.startDate === undefined) {
             this.startDate = new Date();
