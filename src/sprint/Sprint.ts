@@ -10,15 +10,15 @@ import { State } from './SprintState';
 import { CreatedState } from "./CreatedState";
 import { SprintType } from './Type';
 import { ScrumMaster } from '../Roles/ScrumMaster';
+import { SprintProperties } from './SprintProperties';
 
 export class Sprint implements Subject {
+
     private members: Person<Role>[];
     private backlog: SprintBacklog;
-    private startDate: Date;
-    private endDate: Date;
+    private props: SprintProperties;
     private state: State;
     private observers: Observer[] = [];
-    private name: string;
     private id: string;
     private scrumMaster: Person<ScrumMaster>;
     readonly sprintType: SprintType;
@@ -26,10 +26,8 @@ export class Sprint implements Subject {
     constructor(scrumMaster: Person<ScrumMaster>, members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
         this.members = members;
         this.backlog = backlog;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.props = new SprintProperties(name, startDate, endDate);
         this.state = new CreatedState();
-        this.name = name;
         this.id = nanoid();
         this.sprintType = type;
         this.scrumMaster = scrumMaster;
@@ -52,11 +50,11 @@ export class Sprint implements Subject {
     }
 
     getStartDate(): Date {
-        return this.startDate;
+        return this.props.getStartDate();
     }
 
     getEndDate(): Date {
-        return this.endDate;
+        return this.props.getEndDate();
     }
 
     getState(): State {
@@ -64,7 +62,7 @@ export class Sprint implements Subject {
     }
 
     getName(): string {
-        return this.name;
+        return this.props.getName();
     }
 
     getId(): string {
@@ -76,15 +74,15 @@ export class Sprint implements Subject {
     }
 
     setStartDate(startDate: Date): void {
-        this.startDate = startDate;
+        this.state.setStartDate(this, this.props, startDate);
     }
 
     setEndDate(endDate: Date): void {
-        this.endDate = endDate;
+        this.state.setEndDate(this, this.props, endDate);
     }
 
     setName(name: string): void {
-        this.name = name;
+        this.state.setName(this, this.props, name);
     }
 
     setState(state: State): void {
@@ -125,8 +123,12 @@ export class Sprint implements Subject {
         this.notifyObservers(`Sprint: ${action}`);
     }
 
-    start(): void {
-        this.state.start(this);
+    start(person: Person<Role>): void {
+        if(person === this.getScrumMaster()) {
+            this.state.start(this);
+        } else {
+            this.notifyObservers(`A sprint can only be started by a scrum master`);
+        }
     }
 
     finish(): void {

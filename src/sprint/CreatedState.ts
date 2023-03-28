@@ -3,8 +3,24 @@ import { BacklogList } from "../BackLogList/BackLogList";
 import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
 import { ActivatedState } from "./ActivatedState";
+import { SprintProperties } from "./SprintProperties";
 
 export class CreatedState implements State {
+    setName(sprint: Sprint, props: SprintProperties, name: string): void {
+        props.setName(name);
+        sprint.notifyObservers('Sprint name updated');
+    }
+
+    setStartDate(sprint: Sprint, props: SprintProperties, startDate: Date): void {
+        props.setStartDate(startDate);
+        sprint.notifyObservers('Sprint start date updated');
+    }
+
+    setEndDate(sprint: Sprint, props: SprintProperties, endDate: Date): void {
+        props.setEndDate(endDate);
+        sprint.notifyObservers('Sprint end date updated');
+    }
+
     moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: BacklogList): void {
         throw new Error("Method not implemented.");
     }
@@ -34,20 +50,5 @@ export class CreatedState implements State {
     removeBacklogItem(sprint: Sprint, item: BacklogItem): void {
         sprint.addBacklogItem(item);
         sprint.notifyObservers('Backlog item removed');
-    }
-
-    setName(sprint: Sprint, name: string): void {
-        sprint.setName(name);
-        sprint.notifyObservers('Sprint name updated');
-    }
-
-    setStartDate(sprint: Sprint, startDate: Date): void {
-        sprint.setStartDate(startDate);
-        sprint.notifyObservers('Sprint start date updated');
-    }
-
-    setEndDate(sprint: Sprint, endDate: Date): void {
-        sprint.setEndDate(endDate);
-        sprint.notifyObservers('Sprint end date updated');
     }
 }
