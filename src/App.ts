@@ -7,15 +7,11 @@ import { DoingList } from "./BackLogList/DoingList";
 import { DoneList } from "./BackLogList/DoneList";
 import { TodoList } from "./BackLogList/TodoList";
 import { SprintBacklogFactory } from "./BackLogFactory/SprintBackLogFactory";
-import { LogObserver } from "./Observer/LogObserver";
 import { PersonFactory } from "./PersonFactory";
-import { Developer } from "./Roles/Developer";
 import { ScrumMaster } from "./Roles/ScrumMaster";
 import { Tester } from "./Roles/Tester";
 import { LeadDeveloper } from "./Roles/LeadDeveloper";
 import { Repository } from "./Repository";
-import { Sprint } from "./sprint/Sprint";
-import { SprintBacklog } from "./SprintBackLog";
 import { SprintType } from "./sprint/Type";
 import { SprintLogObserver } from "./Observer/SprintLogObserver";
 

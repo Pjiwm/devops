@@ -6,12 +6,10 @@ export abstract class ListStategy {
 
     private backlogItems: BacklogItem[];
     private name: string;
-    private observers: Observer[];
 
-    constructor(backlogItems: BacklogItem[], name: string, observers: Observer[]) {
-        this.backlogItems = backlogItems
+    constructor( name: string) {
+        this.backlogItems = [];
         this.name = name
-        this.observers = observers
     }
 
     public abstract addBacklogItem(backlogItem: BacklogItem): void;
@@ -19,4 +17,5 @@ export abstract class ListStategy {
     public abstract getName(): string;
     public abstract contains(backlogItem: BacklogItem): boolean
     public abstract getBacklogItems(): BacklogItem[];
+
 }

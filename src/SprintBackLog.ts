@@ -1,5 +1,4 @@
 import { nanoid } from 'nanoid';
-import { BacklogItem } from './BackLogItem'
 import { ListStategy } from './BackLogList/ListStategy';
 import { Observer } from './Observer/Observer';
 import { Subject } from './Observer/Subject';
@@ -8,7 +7,6 @@ import { Repository } from './Repository';
 // SprintBacklog class (Context)
 export class SprintBacklog implements Subject {
     private backlogLists: ListStategy[];
-    private backlogItems: BacklogItem[];
     private observers: Observer[];
     private id: string;
     private repostiory: Repository;

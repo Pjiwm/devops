@@ -1,6 +1,5 @@
 import { nanoid } from 'nanoid';
 import { BacklogItem } from '../BackLogItem';
-import { BacklogList } from '../BackLogList/BackLogList';
 import { Observer } from '../Observer/Observer';
 import { Subject } from '../Observer/Subject';
 import { Person } from '../Person';
@@ -11,6 +10,7 @@ import { CreatedState } from "./CreatedState";
 import { SprintType } from './Type';
 import { ScrumMaster } from '../Roles/ScrumMaster';
 import { SprintProperties } from './SprintProperties';
+import { ListStategy } from '../BackLogList/ListStategy';
 
 export class Sprint implements Subject {
 
@@ -45,7 +45,7 @@ export class Sprint implements Subject {
         return this.backlog;
     }
 
-    getTodoList(): BacklogList {
+    getTodoList(): ListStategy {
         return this.backlog.getBacklogLists()[0];
     }
 
@@ -89,7 +89,7 @@ export class Sprint implements Subject {
         this.state = state;
     }
 
-    findBacklogList(item: BacklogItem): BacklogList | undefined {
+    findBacklogList(item: BacklogItem): ListStategy | undefined {
         for (const list of this.backlog.getBacklogLists()) {
             if (list.contains(item)) {
                 return list;
@@ -148,11 +148,11 @@ export class Sprint implements Subject {
         this.state.removeBacklogItem(this, item);
     }
 
-    getBackLogLists(): BacklogList[] {
+    getBackLogLists(): ListStategy[] {
         return this.backlog.getBacklogLists();
     }
 
-    changeBacklogItemPosition(item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {
+    changeBacklogItemPosition(item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         this.state.changeBacklogItemPosition(this, item, sourceList, destinationList);
     }
 
