@@ -14,7 +14,7 @@ class ClosedState implements State {
     setEndDate(sprint: Sprint, props: SprintProperties, endDate: Date): void {
         sprint.notifyObservers("Cannot set end date in a closed sprint.");
     }
-    addBacklogItem(sprint: Sprint, item: BacklogItem): void {
+    addBacklogItem(sprint: Sprint, todoList: BacklogList, item: BacklogItem): void {
         sprint.notifyObservers("Cannot add backlog item to closed sprint.");
     }
 

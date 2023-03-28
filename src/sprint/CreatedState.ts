@@ -42,8 +42,8 @@ export class CreatedState implements State {
         sprint.notifyObservers('Cannot finish a sprint that has not been started yet');
     }
 
-    addBacklogItem(sprint: Sprint, item: BacklogItem): void {
-        sprint.addBacklogItem(item);
+    addBacklogItem(sprint: Sprint, todoList: BacklogList, item: BacklogItem): void {
+        todoList.addBacklogItem(item);
         sprint.notifyObservers('Backlog item added');
     }
 

@@ -136,7 +136,8 @@ export class Sprint implements Subject {
     }
 
     addBacklogItem(item: BacklogItem): void {
-        this.state.addBacklogItem(this, item);
+        // TODO this can be made better...
+        this.state.addBacklogItem(this, this.getBackLogLists()[0], item);
     }
 
     swapDeveloper(item: BacklogItem, developer: Person<Role>): void {
