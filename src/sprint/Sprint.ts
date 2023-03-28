@@ -12,16 +12,17 @@ import { SprintType } from './Type';
 import { ScrumMaster } from '../Roles/ScrumMaster';
 
 export class Sprint implements Subject {
-        members: Person<Role>[];
-        backlog: SprintBacklog;
-        startDate: Date;
-        endDate: Date;
-        state: State;
-        observers: Observer[] = [];
-        name: string;
-        id: string;
-        scrumMaster: Person<ScrumMaster>;
-        readonly sprintType: SprintType;
+
+    private members: Person<Role>[];
+    private backlog: SprintBacklog;
+    private startDate: Date;
+    protected endDate: Date;
+    private state: State;
+    private observers: Observer[] = [];
+    private name: string;
+    private id: string;
+    private scrumMaster: Person<ScrumMaster>;
+    readonly sprintType: SprintType;
 
     constructor(scrumMaster: Person<ScrumMaster>, members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
         this.members = members;
@@ -35,7 +36,7 @@ export class Sprint implements Subject {
         this.scrumMaster = scrumMaster;
     }
 
-    getScrumMaster(): Person<Role> {
+    getScrumMaster(): Person<ScrumMaster> {
         return this.scrumMaster;
     }
 
@@ -141,8 +142,16 @@ export class Sprint implements Subject {
         this.state.addBacklogItem(this, item);
     }
 
+    swapDeveloper(item: BacklogItem, developer: Person<Role>): void {
+        item.swapAssignee(this, developer);
+    }
+
     removeBacklogItem(item: BacklogItem): void {
         this.state.removeBacklogItem(this, item);
+    }
+
+    getBackLogLists(): BacklogList[] {
+        return this.backlog.getBacklogLists();
     }
 
     changeBacklogItemPosition(item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {
