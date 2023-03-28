@@ -1,35 +1,34 @@
 import { BacklogItem } from "../BackLogItem";
-import { Observer } from "../Observer/Observer";
 import { ListStategy } from "./ListStategy";
+import { Observer } from "../Observer/Observer";
 
-// DoneList class (Concrete Strategy)
-export class DoneList extends ListStategy {
+// TestList class (Concrete Strategy)
+export class TestList extends ListStategy {
 
     constructor(backlogItems: BacklogItem[], name: string, observers: Observer[]) {
         super(backlogItems, name, observers);
     }
 
-    contains(backlogItem: BacklogItem): boolean {
-        return this.getBacklogItems().includes(backlogItem);
-
+    getName(): string {
+        return this.getName();
     }
 
-    public addBacklogItem(backlogItem: BacklogItem): void {
+    getBacklogItems(): BacklogItem[] {
+        return this.getBacklogItems();
+    }
+
+    contains(backlogItem: BacklogItem): boolean {
+        return this.getBacklogItems().includes(backlogItem);
+    }
+
+    addBacklogItem(backlogItem: BacklogItem): void {
         this.getBacklogItems().push(backlogItem);
     }
 
-    public removeBacklogItem(backlogItem: BacklogItem): void {
+    removeBacklogItem(backlogItem: BacklogItem): void {
         const index = this.getBacklogItems().indexOf(backlogItem);
         if (index !== -1) {
             this.getBacklogItems().splice(index, 1);
         }
-    }
-
-    public getBacklogItems(): BacklogItem[] {
-        return this.getBacklogItems();
-    }
-
-    public getName(): string {
-        return this.getName()
     }
 }

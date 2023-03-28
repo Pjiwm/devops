@@ -1,7 +1,7 @@
 import { BacklogItem } from "../BackLogItem";
-import { BacklogList } from "../BackLogList/BackLogList";
+import { ListStategy } from "../BackLogList/ListStategy";
 import { SprintBacklog } from "../SprintBackLog";
 
 export interface SprintBacklogFactory {
-  create(backlogLists: BacklogList[], backlogItems: BacklogItem[]): SprintBacklog;
+  create(backlogLists: ListStategy[], backlogItems: BacklogItem[]): SprintBacklog;
 }
