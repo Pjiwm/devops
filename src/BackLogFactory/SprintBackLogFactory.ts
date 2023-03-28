@@ -4,12 +4,17 @@ import { Repository } from "../Repository";
 import { SprintBacklog } from "../SprintBackLog";
 
 export class SprintBacklogFactory implements SprintBacklogFactory {
-    create(backlogLists: ListStategy[], backlogItems: BacklogItem[], repository: Repository): SprintBacklog {
-        let backlog = new SprintBacklog(backlogLists, repository);
 
-        for (let item of backlogItems) {
-            backlog.addBacklogItem(item);
-        }
-        return backlog;
+    create(extraLists: ListStategy[], repository: Repository): SprintBacklog {
+        let lists = new Array<ListStategy>();
+        lists.push(new TodoList("Todo"));
+        lists.push(new TodoList("Doing"));
+        lists.concat(extraLists);
+        lists.push(new TestList("Testing"));
+        lists.push(new TodoList("Done"));
+
+        return new SprintBacklog(lists, repository);
+
     }
+
 }

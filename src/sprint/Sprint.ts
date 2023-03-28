@@ -10,16 +10,15 @@ import { State } from './SprintState';
 import { CreatedState } from "./CreatedState";
 import { SprintType } from './Type';
 import { ScrumMaster } from '../Roles/ScrumMaster';
+import { SprintProperties } from './SprintProperties';
 
 export class Sprint implements Subject {
 
     private members: Person<Role>[];
     private backlog: SprintBacklog;
-    private startDate: Date;
-    protected endDate: Date;
+    private props: SprintProperties;
     private state: State;
     private observers: Observer[] = [];
-    private name: string;
     private id: string;
     private scrumMaster: Person<ScrumMaster>;
     readonly sprintType: SprintType;
@@ -27,10 +26,8 @@ export class Sprint implements Subject {
     constructor(scrumMaster: Person<ScrumMaster>, members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
         this.members = members;
         this.backlog = backlog;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.props = new SprintProperties(name, startDate, endDate);
         this.state = new CreatedState();
-        this.name = name;
         this.id = nanoid();
         this.sprintType = type;
         this.scrumMaster = scrumMaster;
@@ -53,11 +50,11 @@ export class Sprint implements Subject {
     }
 
     getStartDate(): Date {
-        return this.startDate;
+        return this.props.getStartDate();
     }
 
     getEndDate(): Date {
-        return this.endDate;
+        return this.props.getEndDate();
     }
 
     getState(): State {
@@ -65,7 +62,7 @@ export class Sprint implements Subject {
     }
 
     getName(): string {
-        return this.name;
+        return this.props.getName();
     }
 
     getId(): string {
@@ -77,15 +74,15 @@ export class Sprint implements Subject {
     }
 
     setStartDate(startDate: Date): void {
-        this.state.setStartDate(this, startDate);
+        this.state.setStartDate(this, this.props, startDate);
     }
 
     setEndDate(endDate: Date): void {
-        this.state.setEndDate(this, endDate);
+        this.state.setEndDate(this, this.props, endDate);
     }
 
     setName(name: string): void {
-        this.state.setName(this, name);
+        this.state.setName(this, this.props, name);
     }
 
     setState(state: State): void {
@@ -139,7 +136,8 @@ export class Sprint implements Subject {
     }
 
     addBacklogItem(item: BacklogItem): void {
-        this.state.addBacklogItem(this, item);
+        // TODO this can be made better...
+        this.state.addBacklogItem(this, this.getBackLogLists()[0], item);
     }
 
     swapDeveloper(item: BacklogItem, developer: Person<Role>): void {

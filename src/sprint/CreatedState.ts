@@ -3,33 +3,37 @@ import { ListStategy } from "../BackLogList/ListStategy";
 import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
 import { ActivatedState } from "./ActivatedState";
+import { SprintProperties } from "./SprintProperties";
 
 export class CreatedState implements State {
-    setName(sprint: Sprint, name: string): void {
-        sprint.name = name;
+    setName(sprint: Sprint, props: SprintProperties, name: string): void {
+        props.setName(name);
         sprint.notifyObservers('Sprint name updated');
     }
 
-    setStartDate(sprint: Sprint, startDate: Date): void {
-        sprint.startDate = startDate
+    setStartDate(sprint: Sprint, props: SprintProperties, startDate: Date): void {
+        props.setStartDate(startDate);
         sprint.notifyObservers('Sprint start date updated');
     }
 
-    setEndDate(sprint: Sprint, endDate: Date): void {
-        sprint.endDate = endDate;
+    setEndDate(sprint: Sprint, props: SprintProperties, endDate: Date): void {
+        props.setEndDate(endDate);
         sprint.notifyObservers('Sprint end date updated');
     }
-    
+  
     moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: ListStategy): void {
         throw new Error("Method not implemented.");
     }
-    closeSprint(sprint: Sprint): void {
+
+  closeSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
-    finishSprint(sprint: Sprint): void {
+  
+  finishSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
-    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
+  
+  changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         throw new Error("Method not implemented.");
     }
     start(sprint: Sprint): void {
@@ -41,8 +45,8 @@ export class CreatedState implements State {
         sprint.notifyObservers('Cannot finish a sprint that has not been started yet');
     }
 
-    addBacklogItem(sprint: Sprint, item: BacklogItem): void {
-        sprint.addBacklogItem(item);
+    addBacklogItem(sprint: Sprint, todoList: BacklogList, item: BacklogItem): void {
+        todoList.addBacklogItem(item);
         sprint.notifyObservers('Backlog item added');
     }
 
