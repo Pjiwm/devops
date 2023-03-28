@@ -1,5 +1,5 @@
 import { BacklogItem } from "../BackLogItem";
-import { BacklogList } from "../BackLogList/BackLogList";
+import { ListStategy } from "../BackLogList/ListStategy";
 import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
@@ -22,7 +22,7 @@ class ClosedState implements State {
         sprint.notifyObservers("Cannot remove backlog item from closed sprint.");
     }
 
-    moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: BacklogList): void {
+    moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: ListStategy): void {
         sprint.notifyObservers("Cannot move backlog item in closed sprint.");
     }
 
@@ -42,7 +42,7 @@ class ClosedState implements State {
         sprint.notifyObservers("Cannot finish a closed sprint.");
     }
 
-    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {
+    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         sprint.notifyObservers("Cannot change backlog item position in closed sprint.");
     }
 }

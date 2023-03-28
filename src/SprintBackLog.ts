@@ -1,18 +1,19 @@
 import { nanoid } from 'nanoid';
 import { BacklogItem } from './BackLogItem'
-import { BacklogList } from './BackLogList/BackLogList';
+import { ListStategy } from './BackLogList/ListStategy';
 import { Observer } from './Observer/Observer';
 import { Subject } from './Observer/Subject';
 import { Repository } from './Repository';
 
 // SprintBacklog class (Context)
 export class SprintBacklog implements Subject {
-    private backlogLists: BacklogList[];
+    private backlogLists: ListStategy[];
+    private backlogItems: BacklogItem[];
     private observers: Observer[];
     private id: string;
     private repostiory: Repository;
 
-    constructor(backlogLists: BacklogList[], repository: Repository) {
+    constructor(backlogLists: ListStategy[], repository: Repository) {
         this.backlogLists = backlogLists;
         this.observers = [];
         this.id = nanoid();
@@ -23,8 +24,24 @@ export class SprintBacklog implements Subject {
         return this.id;
     }
 
-    public getBacklogLists(): BacklogList[] {
+    public getBacklogLists(): ListStategy[] {
         return this.backlogLists;
+    }
+
+    public getTodoList(): ListStategy {
+        return this.backlogLists[0];
+    }
+
+    public getInProgressList(): ListStategy {
+        return this.backlogLists[1];
+    }
+
+    public getDoneList(): ListStategy {
+        return this.backlogLists[this.backlogLists.length - 1];
+    }
+
+    public getTestingList(): ListStategy {
+        return this.backlogLists[this.backlogLists.length - 2];
     }
 
     public getRepository(): Repository {

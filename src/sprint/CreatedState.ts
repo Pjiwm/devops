@@ -1,5 +1,5 @@
 import { BacklogItem } from "../BackLogItem";
-import { BacklogList } from "../BackLogList/BackLogList";
+import { ListStategy } from "../BackLogList/ListStategy";
 import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
 import { ActivatedState } from "./ActivatedState";
@@ -20,18 +20,21 @@ export class CreatedState implements State {
         props.setEndDate(endDate);
         sprint.notifyObservers('Sprint end date updated');
     }
+  
+    moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: ListStategy): void {
+        throw new Error("Method not implemented.");
+    }
 
-    moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: BacklogList): void {
+  closeSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
-    closeSprint(sprint: Sprint): void {
+  
+  finishSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
-    finishSprint(sprint: Sprint): void {
+  
+  changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         throw new Error("Method not implemented.");
-    }
-    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {
-        sprint.notifyObservers("Method not implemented.");
     }
     start(sprint: Sprint): void {
         sprint.setState(new ActivatedState());
