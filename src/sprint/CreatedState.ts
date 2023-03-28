@@ -20,7 +20,7 @@ export class CreatedState implements State {
         props.setEndDate(endDate);
         sprint.notifyObservers('Sprint end date updated');
     }
-  
+
     moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: ListStategy): void {
         throw new Error("Method not implemented.");
     }
@@ -28,11 +28,11 @@ export class CreatedState implements State {
   closeSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
-  
+
   finishSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
-  
+
   changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         throw new Error("Method not implemented.");
     }
@@ -45,7 +45,7 @@ export class CreatedState implements State {
         sprint.notifyObservers('Cannot finish a sprint that has not been started yet');
     }
 
-    addBacklogItem(sprint: Sprint, todoList: BacklogList, item: BacklogItem): void {
+    addBacklogItem(sprint: Sprint, todoList: ListStategy, item: BacklogItem): void {
         todoList.addBacklogItem(item);
         sprint.notifyObservers('Backlog item added');
     }

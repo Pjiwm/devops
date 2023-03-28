@@ -1,5 +1,7 @@
 import { BacklogItem } from "../BackLogItem";
 import { ListStategy } from "../BackLogList/ListStategy";
+import { TestList } from "../BackLogList/TestList";
+import { TodoList } from "../BackLogList/TodoList";
 import { Repository } from "../Repository";
 import { SprintBacklog } from "../SprintBackLog";
 

@@ -5,8 +5,8 @@ import { Observer } from "../Observer/Observer";
 // TestList class (Concrete Strategy)
 export class TestList extends ListStategy {
 
-    constructor(backlogItems: BacklogItem[], name: string, observers: Observer[]) {
-        super(backlogItems, name, observers);
+    constructor(name: string) {
+        super(name);
     }
 
     getName(): string {

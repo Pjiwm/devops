@@ -5,8 +5,8 @@ import { ListStategy } from "./ListStategy";
 // TodoList class (Concrete Strategy)
 export class TodoList extends ListStategy {
 
-    constructor(backlogItems: BacklogItem[], name: string, observers: Observer[]) {
-        super(backlogItems, name, observers);
+    constructor(name: string) {
+        super(name);
     }
 
     contains(backlogItem: BacklogItem): boolean {
