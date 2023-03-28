@@ -15,7 +15,7 @@ export class Sprint implements Subject {
     private members: Person<Role>[];
     private backlog: SprintBacklog;
     private startDate: Date;
-    protected endDate: Date;
+    private endDate: Date;
     private state: State;
     private observers: Observer[] = [];
     private name: string;
