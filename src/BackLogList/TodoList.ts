@@ -8,7 +8,7 @@ export class TodoList extends ListStategy {
     constructor(backlogItems: BacklogItem[], name: string, observers: Observer[]) {
         super(backlogItems, name, observers);
     }
-    
+
     contains(backlogItem: BacklogItem): boolean {
         return this.getBacklogItems().includes(backlogItem);
     }

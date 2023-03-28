@@ -29,6 +29,22 @@ export class SprintBacklog implements Subject {
         return this.backlogLists;
     }
 
+    public getTodoList(): ListStategy {
+        return this.backlogLists[0];
+    }
+
+    public getInProgressList(): ListStategy {
+        return this.backlogLists[1];
+    }
+
+    public getDoneList(): ListStategy {
+        return this.backlogLists[this.backlogLists.length - 1];
+    }
+
+    public getTestingList(): ListStategy {
+        return this.backlogLists[this.backlogLists.length - 2];
+    }
+
     public getRepository(): Repository {
         return this.repostiory;
     }

@@ -1,5 +1,7 @@
 import { BacklogItem } from "../BackLogItem";
-import { BacklogList } from "../BackLogList/BackLogList";
+import { ListStategy } from "../BackLogList/ListStategy";
+import { TestList } from "../BackLogList/TestList";
+import { Tester } from "../Roles/Tester";
 import { FinishedState } from "./FinishedState";
 import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
@@ -23,7 +25,7 @@ export class ActivatedState implements State {
         sprint.notifyObservers("Cannot remove backlog item in an activated sprint.");
     }
 
-    moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: BacklogList): void {
+    moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: ListStategy): void {
         if (targetList !== sprint.getTodoList()) {
             sprint.notifyObservers("Cannot move backlog items from/to the Todo list in an activated sprint.");
         }
@@ -53,7 +55,7 @@ export class ActivatedState implements State {
         sprint.notifyObservers("Cannot finish an already activated sprint.");
     }
 
-    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: BacklogList, destinationList: BacklogList): void {
+    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         if (destinationList !== sprint.getTodoList()) {
             sprint.notifyObservers("Cannot change backlog item position in an activated sprint.");
         }
@@ -61,6 +63,14 @@ export class ActivatedState implements State {
         if (sourceList !== destinationList) {
             sourceList.removeBacklogItem(item);
             destinationList.addBacklogItem(item);
+
+            if (destinationList instanceof TestList) {
+                sprint.getMembers().forEach(member => {
+                    if (member.roleActions() instanceof Tester) {
+                        member.notifyObservers("A new item has been added ready for testing.");
+                    }
+                });
+            }
         }
     }
 }
