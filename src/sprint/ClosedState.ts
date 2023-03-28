@@ -4,9 +4,8 @@ import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
 
 class ClosedState implements State {
-    setName(sprint: Sprint, name: string): string {
+    setName(sprint: Sprint, name: string): void {
         sprint.notifyObservers("Cannot set name in a closed sprint.");
-        return sprint.getName();
     }
     setStartDate(sprint: Sprint, startDate: Date): void {
         sprint.notifyObservers("Cannot set start date in a closed sprint.");

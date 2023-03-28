@@ -5,19 +5,19 @@ import { State } from "./SprintState";
 import { ActivatedState } from "./ActivatedState";
 
 export class CreatedState implements State {
-    setName(sprint: Sprint, name: string): string {
+    setName(sprint: Sprint, name: string): void {
+        sprint.name = name;
         sprint.notifyObservers('Sprint name updated');
-        return name;
     }
 
-    setStartDate(sprint: Sprint, startDate: Date): Date {
+    setStartDate(sprint: Sprint, startDate: Date): void {
+        sprint.startDate = startDate
         sprint.notifyObservers('Sprint start date updated');
-        return startDate
     }
 
-    setEndDate(sprint: Sprint, endDate: Date): Date {
+    setEndDate(sprint: Sprint, endDate: Date): void {
+        sprint.endDate = endDate;
         sprint.notifyObservers('Sprint end date updated');
-        return endDate
     }
     
     moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: BacklogList): void {

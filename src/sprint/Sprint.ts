@@ -12,16 +12,16 @@ import { SprintType } from './Type';
 import { ScrumMaster } from '../Roles/ScrumMaster';
 
 export class Sprint implements Subject {
-    private members: Person<Role>[];
-    private backlog: SprintBacklog;
-    private startDate: Date;
-    private endDate: Date;
-    private state: State;
-    private observers: Observer[] = [];
-    private name: string;
-    private id: string;
-    private scrumMaster: Person<ScrumMaster>;
-    readonly sprintType: SprintType;
+        members: Person<Role>[];
+        backlog: SprintBacklog;
+        startDate: Date;
+        endDate: Date;
+        state: State;
+        observers: Observer[] = [];
+        name: string;
+        id: string;
+        scrumMaster: Person<ScrumMaster>;
+        readonly sprintType: SprintType;
 
     constructor(scrumMaster: Person<ScrumMaster>, members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
         this.members = members;
@@ -84,7 +84,7 @@ export class Sprint implements Subject {
     }
 
     setName(name: string): void {
-        this.name = this.state.setName(this, name);
+        this.state.setName(this, name);
     }
 
     setState(state: State): void {

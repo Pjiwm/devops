@@ -6,17 +6,14 @@ import { State } from "./SprintState";
 
 export class ActivatedState implements State {
 
-    setName(sprint: Sprint, name: string): string {
+    setName(sprint: Sprint, name: string): void {
         sprint.notifyObservers("Cannot set name in an activated sprint.");
-        return sprint.getName();
     }
-    setStartDate(sprint: Sprint, startDate: Date): Date {
+    setStartDate(sprint: Sprint, startDate: Date): void {
         sprint.notifyObservers("Cannot set start date in an activated sprint.");
-        return sprint.getStartDate();
     }
-    setEndDate(sprint: Sprint, endDate: Date): Date {
+    setEndDate(sprint: Sprint, endDate: Date): void {
         sprint.notifyObservers("Cannot set end date in an activated sprint.");
-        return sprint.getEndDate();
     }
     addBacklogItem(sprint: Sprint, item: BacklogItem): void {
         sprint.notifyObservers("Cannot add backlog item in an activated sprint.");
