@@ -1,5 +1,7 @@
 import { BacklogItem } from "../BackLogItem";
 import { Observer } from "../Observer/Observer";
+import { Person } from "../Person";
+import { Role } from "../Roles/Role";
 import { ListStategy } from "./ListStategy";
 
 // DoingList class (Concrete Strategy)
@@ -29,6 +31,10 @@ export class DoingList extends ListStategy {
     }
 
     public getBacklogItems(): BacklogItem[] {
-        return this.getBacklogItems();
+        return this.backlogItems;
+    }
+
+    public addPerson(person: Person<Role>): void {
+        person.notifyObservers("User could not be added to this list");
     }
 }

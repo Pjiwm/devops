@@ -11,6 +11,8 @@ import { SprintType } from './Type';
 import { ScrumMaster } from '../Roles/ScrumMaster';
 import { SprintProperties } from './SprintProperties';
 import { ListStategy } from '../BackLogList/ListStategy';
+import { LeadDeveloper } from '../Roles/LeadDeveloper';
+import { Tester } from '../Roles/Tester';
 
 export class Sprint implements Subject {
 
@@ -21,9 +23,11 @@ export class Sprint implements Subject {
     private observers: Observer[] = [];
     private id: string;
     private scrumMaster: Person<ScrumMaster>;
+    private leadDeveloper: Person<LeadDeveloper>
     readonly sprintType: SprintType;
 
-    constructor(scrumMaster: Person<ScrumMaster>, members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
+    constructor(scrumMaster: Person<ScrumMaster>, leadDeveloper: Person<LeadDeveloper>, members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
+        members.push(scrumMaster, leadDeveloper);
         this.members = members;
         this.backlog = backlog;
         this.props = new SprintProperties(name, startDate, endDate);
@@ -31,6 +35,13 @@ export class Sprint implements Subject {
         this.id = nanoid();
         this.sprintType = type;
         this.scrumMaster = scrumMaster;
+        this.leadDeveloper = leadDeveloper;
+
+        this.members.forEach(member => { 
+            if(member.roleActions() instanceof Tester) {
+                this.backlog.getReadyForTesting().addPerson(member);
+            }
+         })
     }
 
     getScrumMaster(): Person<ScrumMaster> {
@@ -46,7 +57,11 @@ export class Sprint implements Subject {
     }
 
     getTodoList(): ListStategy {
-        return this.backlog.getBacklogLists()[0];
+        return this.backlog.getTodoList();
+    }
+
+    getReadyForTestingList(): ListStategy {
+        return this.backlog.getReadyForTesting();
     }
 
     getStartDate(): Date {

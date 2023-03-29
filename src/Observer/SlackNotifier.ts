@@ -12,8 +12,7 @@ class SlackNotifier implements Observer {
 
   // Update method called by the subject when a change occurs
   update(subject: Subject, message: string): void {
-
-    // console.log(`Sending Slack notification to ${this.slackUsername}: ${message}`);
+    console.log(`Sending Slack notification to ${this.slackUsername}: ${message}`);
     // TODO: Implement sending Slack notification
   }
 }
