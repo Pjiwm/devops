@@ -12,7 +12,7 @@ import { ScrumMaster } from "./Roles/ScrumMaster";
 import { Tester } from "./Roles/Tester";
 import { LeadDeveloper } from "./Roles/LeadDeveloper";
 import { Repository } from "./Repository";
-import { SprintType } from "./sprint/Type";
+import { SprintType } from "./Sprint/Type";
 import { SprintLogObserver } from "./Observer/SprintLogObserver";
 import { Developer } from "./Roles/Developer";
 

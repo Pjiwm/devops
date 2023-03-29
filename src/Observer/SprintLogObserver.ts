@@ -1,4 +1,4 @@
-import { Sprint } from "../sprint/Sprint";
+import { Sprint } from "../Sprint/Sprint";
 import { Observer } from "./Observer";
 import { Subject } from "./Subject";
 

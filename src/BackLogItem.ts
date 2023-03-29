@@ -4,7 +4,7 @@ import { Observer } from "./Observer/Observer";
 import { Subject } from "./Observer/Subject";
 import { Person } from "./Person";
 import { Role } from "./Roles/Role";
-import { Sprint } from "./sprint/Sprint";
+import { Sprint } from "./Sprint/Sprint";
 
 // BacklogItem class (Subject)
 export class BacklogItem implements Subject {

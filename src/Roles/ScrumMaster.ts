@@ -1,5 +1,5 @@
 import { Person } from "../Person";
-import { SprintBuilder } from "../sprint/SprintBuilder";
+import { SprintBuilder } from "../Sprint/SprintBuilder";
 import { LeadDeveloper } from "./LeadDeveloper";
 import { Role } from "./Role";
 
