@@ -1,11 +1,17 @@
 import { BacklogItem } from "../BackLogItem";
 import { ListStategy } from "../BackLogList/ListStategy";
+import { Person } from "../Person";
+import { Role } from "../Roles/Role";
 import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
 import { ClosedState } from "./ClosedState";
 
 export class FinishedState implements State {
+
+    moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void {
+        sprint.notifyObservers("Cannot move backlog item in a finished sprint.");
+    }
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
         sprint.notifyObservers("Cannot set name in a finshed sprint.");
     }
@@ -26,11 +32,7 @@ export class FinishedState implements State {
         sprint.notifyObservers("Cannot remove backlog item from a finished sprint.");
     }
 
-    moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: ListStategy): void {
-        sprint.notifyObservers("Cannot move backlog item in a finished sprint.");
-    }
-
-    start(sprint: Sprint): void {
+    startSprint(sprint: Sprint): void {
         sprint.notifyObservers("Cannot start a sprint that is already finished.");
     }
 
@@ -43,7 +45,4 @@ export class FinishedState implements State {
         sprint.notifyObservers('Sprint closed');
     }
 
-    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
-        sprint.notifyObservers("Cannot change backlog item position in a finished sprint.");
-    }
 }

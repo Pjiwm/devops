@@ -11,14 +11,6 @@ export class TestedList extends ListStategy {
         super(name);
     }
 
-    public getName(): string {
-        return this.getName();
-    }
-
-    public getBacklogItems(): BacklogItem[] {
-        return this.backlogItems;
-    }
-
     contains(backlogItem: BacklogItem): boolean {
         return this.getBacklogItems().includes(backlogItem);
     }
@@ -33,7 +25,7 @@ export class TestedList extends ListStategy {
             this.getBacklogItems().splice(index, 1);
         }
     }
-    
+
     public addPerson(person: Person<Role>): void {
         person.notifyObservers("User could not be added to this list");
     }

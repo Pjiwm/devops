@@ -11,10 +11,6 @@ export class DoneList extends ListStategy {
         super(name);
     }
 
-    public getName(): string {
-        return this.getName()
-    }
-
     contains(backlogItem: BacklogItem): boolean {
         return this.getBacklogItems().includes(backlogItem);
     }
@@ -28,10 +24,6 @@ export class DoneList extends ListStategy {
         if (index !== -1) {
             this.getBacklogItems().splice(index, 1);
         }
-    }
-
-    public getBacklogItems(): BacklogItem[] {
-        return this.backlogItems;
     }
 
     public addPerson(person: Person<Role>): void {

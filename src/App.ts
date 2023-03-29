@@ -3,9 +3,6 @@ console.log("test")
 import { SlackNotifier } from "./Observer/SlackNotifier";
 import { EmailNotifier } from "./Observer/EmailNotifier";
 import { BacklogItem } from "./BackLogItem";
-import { DoingList } from "./BackLogList/DoingList";
-import { DoneList } from "./BackLogList/DoneList";
-import { TodoList } from "./BackLogList/TodoList";
 import { SprintBacklogFactory } from "./BackLogFactory/SprintBackLogFactory";
 import { PersonFactory } from "./PersonFactory";
 import { ScrumMaster } from "./Roles/ScrumMaster";
@@ -14,6 +11,7 @@ import { LeadDeveloper } from "./Roles/LeadDeveloper";
 import { Repository } from "./Repository";
 import { SprintType } from "./sprint/Type";
 import { SprintLogObserver } from "./Observer/SprintLogObserver";
+import { Developer } from "./Roles/Developer";
 
 // Example usage
 
@@ -24,8 +22,7 @@ const personFactory = new PersonFactory();
 const scrumMaster = personFactory.createPerson(new ScrumMaster(), "scrum-master");
 let tester = personFactory.createPerson(new Tester(), "tester");
 const leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "lead-dev");
-const developer = personFactory.createPerson(new LeadDeveloper, "dev");
-developer.roleActions().doLeadDevStuff();
+const developer = personFactory.createPerson(new Developer(), "dev");
 
 
 
@@ -73,11 +70,51 @@ sprint.addBacklogItem(items[0])
 sprint.start(scrumMaster);
 
 sprint.setName("Release: New Stable video game") // Should return error
-
-let sourceList = sprint.getTodoList()
-let destinationList = sprint.getReadyForTestingList()
-let item = sourceList.getBacklogItems()[0];
-
-sprint.changeBacklogItemPosition(item, sourceList, destinationList)
-
 console.log(sprint.getName());
+
+// Testing permissions moving items
+let todo = sprint.getTodoList()
+let readyTesting = sprint.getReadyForTestingList()
+let doing = sprint.getDoingList()
+let done = sprint.getDoneList()
+let testing = sprint.getTestingList()
+let tested = sprint.getTestedList()
+
+let item = todo.getBacklogItems()[0];
+
+console.log("\nDev doet iets naar doing:")
+sprint.changeBacklogItemPosition(developer, item, todo, doing);
+console.log("\nDoet iets wat niet bestaat:")
+sprint.changeBacklogItemPosition(developer, item, todo, doing);
+console.log("\nDev doet iets naar ready for testing:")
+sprint.changeBacklogItemPosition(developer, item, doing, readyTesting);
+
+console.log("\ndeveloper probeert iets van Testing te doen:")
+sprint.changeBacklogItemPosition(developer, item, readyTesting, doing);
+sprint.changeBacklogItemPosition(developer, item, readyTesting, done);
+sprint.changeBacklogItemPosition(developer, item, readyTesting, todo);
+
+console.log("\nTester stopt iets in testing:")
+sprint.changeBacklogItemPosition(tester, item, readyTesting, testing);
+
+console.log("\nTester cancelt test:")
+sprint.changeBacklogItemPosition(tester, item, testing, todo);
+
+console.log("\nDeveloper doet iets naar ready for testing:")
+sprint.changeBacklogItemPosition(developer, item, doing, readyTesting);
+sprint.changeBacklogItemPosition(developer, item, todo, readyTesting);
+
+
+console.log("\nTester doet is afronden:")
+sprint.changeBacklogItemPosition(tester, item, readyTesting, testing);
+console.log("Hier fout:")
+sprint.changeBacklogItemPosition(tester, item, testing, done);
+console.log("Hier goed:")
+sprint.changeBacklogItemPosition(tester, item, testing, tested);
+
+console.log("\nDeveloper en tester proberen naar doen te verzetten:")
+sprint.changeBacklogItemPosition(developer, item, tested, doing);
+sprint.changeBacklogItemPosition(tester, item, tested, doing);
+
+console.log("\nLead developer verplaatst iets:")
+sprint.changeBacklogItemPosition(leadDeveloper, item, tested, done);
