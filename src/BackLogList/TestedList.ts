@@ -1,6 +1,8 @@
 import { BacklogItem } from "../BackLogItem";
 import { ListStategy } from "./ListStategy";
 import { Observer } from "../Observer/Observer";
+import { Person } from "../Person";
+import { Role } from "../Roles/Role";
 
 // TestedList class (Concrete Strategy)
 export class TestedList extends ListStategy {
@@ -14,7 +16,7 @@ export class TestedList extends ListStategy {
     }
 
     public getBacklogItems(): BacklogItem[] {
-        return this.getBacklogItems();
+        return this.backlogItems;
     }
 
     contains(backlogItem: BacklogItem): boolean {
@@ -30,5 +32,9 @@ export class TestedList extends ListStategy {
         if (index !== -1) {
             this.getBacklogItems().splice(index, 1);
         }
+    }
+    
+    public addPerson(person: Person<Role>): void {
+        person.notifyObservers("User could not be added to this list");
     }
 }

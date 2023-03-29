@@ -1,5 +1,7 @@
 import { BacklogItem } from "../BackLogItem";
 import { Observer } from "../Observer/Observer";
+import { Person } from "../Person";
+import { Role } from "../Roles/Role";
 
 // ListStategy interface (Strategy)
 export abstract class ListStategy {
@@ -17,5 +19,5 @@ export abstract class ListStategy {
     public abstract removeBacklogItem(backlogItem: BacklogItem): void;
     public abstract contains(backlogItem: BacklogItem): boolean
     public abstract getBacklogItems(): BacklogItem[];
-
+    public abstract addPerson(person: Person<Role>): void;
 }

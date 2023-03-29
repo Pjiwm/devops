@@ -2,6 +2,8 @@ import { BacklogItem } from "../BackLogItem";
 import { SprintBacklog } from "../SprintBackLog";
 import { Observer } from "../Observer/Observer";
 import { ListStategy } from "./ListStategy";
+import { Person } from "../Person";
+import { Role } from "../Roles/Role";
 
 // TodoList class (Concrete Strategy)
 export class TodoList extends ListStategy {
@@ -30,6 +32,10 @@ export class TodoList extends ListStategy {
     }
 
     public getBacklogItems(): BacklogItem[] {
-        return this.backlogItems
+        return this.backlogItems;
+    }
+
+    public addPerson(person: Person<Role>): void {
+        person.notifyObservers("User could not be added to this list");
     }
 }

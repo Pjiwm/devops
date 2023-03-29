@@ -57,21 +57,9 @@ export class ActivatedState implements State {
     }
 
     changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
-        if (destinationList !== sprint.getTodoList()) {
-            sprint.notifyObservers("Cannot change backlog item position in an activated sprint.");
-        }
-
         if (sourceList !== destinationList) {
             sourceList.removeBacklogItem(item);
             destinationList.addBacklogItem(item);
-
-            if (destinationList instanceof ReadyForTestingList) {
-                sprint.getMembers().forEach(member => {
-                    if (member.roleActions() instanceof Tester) {
-                        member.notifyObservers("A new item has been added ready for testing.");
-                    }
-                });
-            }
         }
     }
 }

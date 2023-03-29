@@ -1,5 +1,6 @@
 import { Person } from "../Person";
 import { SprintBuilder } from "../sprint/SprintBuilder";
+import { LeadDeveloper } from "./LeadDeveloper";
 import { Role } from "./Role";
 
 export class ScrumMaster extends Role {
@@ -13,7 +14,7 @@ export class ScrumMaster extends Role {
         console.log("I'm a scrum master, I do scrum master stuff");
     }
 
-    public createSprint(scrumMaster: Person<ScrumMaster>): SprintBuilder {
-        return new SprintBuilder(scrumMaster);
+    public createSprint(scrumMaster: Person<ScrumMaster>, leadDeveloper: Person<LeadDeveloper> ): SprintBuilder {
+        return new SprintBuilder(scrumMaster, leadDeveloper);
     }
 }

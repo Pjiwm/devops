@@ -5,12 +5,10 @@ import { Role } from "./Roles/Role";
 // Class representing a Person
 export class Person<T extends Role> implements Subject {
   private role: T;
-  private notificationMedia: string[];
   private observers: Observer[] = [];
 
-  constructor(private username: string, role: Role, notificationMedia: string[]) {
+  constructor(private username: string, role: Role) {
     this.role = role as T;
-    this.notificationMedia = notificationMedia;
   }
 
   getUsername(): string {
@@ -19,14 +17,6 @@ export class Person<T extends Role> implements Subject {
 
   roleActions(): T {
     return this.role;
-  }
-
-  getNotificationMedia(): string[] {
-    return this.notificationMedia;
-  }
-
-  setNotificationMedia(notificationMedia: string[]): void {
-    this.notificationMedia = notificationMedia;
   }
 
   // Notify all observers of a change

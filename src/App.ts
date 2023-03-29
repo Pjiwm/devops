@@ -21,10 +21,10 @@ import { SprintLogObserver } from "./Observer/SprintLogObserver";
 const personFactory = new PersonFactory();
 
 // Create some Person objects
-const scrumMaster = personFactory.createPerson(new ScrumMaster(), "scrum-master", ["slack", "email"]);
-const tester = personFactory.createPerson(new Tester(), "tester", ["slack"]);
-const leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "lead-dev", ["email"]);
-const developer = personFactory.createPerson(new LeadDeveloper, "dev", ["slack", "email"]);
+const scrumMaster = personFactory.createPerson(new ScrumMaster(), "scrum-master");
+let tester = personFactory.createPerson(new Tester(), "tester");
+const leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "lead-dev");
+const developer = personFactory.createPerson(new LeadDeveloper, "dev");
 developer.roleActions().doLeadDevStuff();
 
 
@@ -37,21 +37,15 @@ const emailNotifier = new EmailNotifier("my-email-address@example.com");
 scrumMaster.addObserver(slackNotifier);
 scrumMaster.addObserver(emailNotifier);
 tester.addObserver(slackNotifier);
+tester.addObserver(emailNotifier);
 leadDeveloper.addObserver(emailNotifier);
 developer.addObserver(slackNotifier);
 developer.addObserver(emailNotifier);
 
 // Perform some actions that require notification
 
-// Change the notification media for a Person
-developer.setNotificationMedia(["email"]);
-
 // Perform another action that requires notification
 // BackLog
-let doingList = new DoingList("Doing right now");
-let doneList = new DoneList("Done");
-let todoList = new TodoList("Todo");
-let lists = [doingList, doneList, todoList];
 let items = [
     new BacklogItem("UX design", "Design UX for login", 10),
     new BacklogItem("Fix button location", "Get the button centered", 4),
@@ -59,11 +53,11 @@ let items = [
     new BacklogItem("Fix stackoverflow in main.ts", "Stack overflow help???", 12),
 ];
 
-let sprint = scrumMaster.roleActions().createSprint(scrumMaster)
+let sprint = scrumMaster.roleActions().createSprint(scrumMaster, leadDeveloper)
     .addStartDate(new Date("2023-09-01"))
     .addEndDate(new Date("2023-09-21"))
     .addName("Release: Stable videogame")
-    .addMembers([developer, leadDeveloper, scrumMaster, tester])
+    .addMembers([developer, tester])
     .addType(SprintType.Release)
     .addSprintBackLog(new SprintBacklogFactory().create(new Repository("Project", "Master")))
     .build();
@@ -79,5 +73,10 @@ sprint.addBacklogItem(items[0])
 sprint.start(scrumMaster);
 
 sprint.setName("Release: New Stable video game") // Should return error
+let sourceList = sprint.getTodoList()
+let destinationList = sprint.getReadyForTestingList()
+let item = sourceList.getBacklogItems()[0];
+
+sprint.changeBacklogItemPosition(item, sourceList, destinationList)
 
 console.log(sprint.getName());
