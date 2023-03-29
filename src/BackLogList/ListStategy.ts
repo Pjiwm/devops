@@ -14,10 +14,16 @@ export abstract class ListStategy {
         this.name = name
     }
 
-    public abstract getName(): string;
     public abstract addBacklogItem(backlogItem: BacklogItem): void;
     public abstract removeBacklogItem(backlogItem: BacklogItem): void;
     public abstract contains(backlogItem: BacklogItem): boolean
-    public abstract getBacklogItems(): BacklogItem[];
     public abstract addPerson(person: Person<Role>): void;
+
+    public getBacklogItems(): BacklogItem[] {
+        return this.backlogItems;
+    }
+
+    public getName(): string {
+        return this.name;
+    }
 }
