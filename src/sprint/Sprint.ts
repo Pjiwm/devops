@@ -13,6 +13,7 @@ import { SprintProperties } from './SprintProperties';
 import { ListStategy } from '../BackLogList/ListStategy';
 import { LeadDeveloper } from '../Roles/LeadDeveloper';
 import { Tester } from '../Roles/Tester';
+import { ActivatedState } from './ActivatedState';
 
 export class Sprint implements Subject {
     private members: Person<Role>[];
@@ -155,14 +156,18 @@ export class Sprint implements Subject {
 
     start(person: Person<Role>): void {
         if(person === this.getScrumMaster()) {
-            this.state.start(this);
+            this.state.startSprint(this);
         } else {
             this.notifyObservers(`A sprint can only be started by a scrum master`);
         }
     }
 
     finish(): void {
-        this.state.finish(this);
+        this.state.finishSprint(this);
+    }
+
+    close(): void {
+        this.state.closeSprint(this);
     }
 
     addBacklogItem(item: BacklogItem): void {

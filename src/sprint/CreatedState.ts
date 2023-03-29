@@ -4,6 +4,7 @@ import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
 import { ActivatedState } from "./ActivatedState";
 import { SprintProperties } from "./SprintProperties";
+import { FinishedState } from "./FinishedState";
 import { Person } from "../Person";
 import { Role } from "../Roles/Role";
 
@@ -12,6 +13,7 @@ export class CreatedState implements State {
     moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void {
         sprint.notifyObservers('Cannot move backlog item in a created sprint.');
     }
+
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
         props.setName(name);
         sprint.notifyObservers('Sprint name updated');
@@ -27,22 +29,22 @@ export class CreatedState implements State {
         sprint.notifyObservers('Sprint end date updated');
     }
 
-    closeSprint(sprint: Sprint): void {
-        sprint.notifyObservers('Cannot close a sprint that has not been started yet');
+    startSprint(sprint: Sprint): void {
+        if (new Date().getTime() > sprint.getEndDate().getTime()) {
+            this.finishSprint(sprint);
+        } else {
+            sprint.setState(new ActivatedState());
+            sprint.notifyObservers('Sprint started');
+        }
     }
 
     finishSprint(sprint: Sprint): void {
-        sprint.notifyObservers('Cannot finish a sprint that has not been started yet');
-
+        sprint.setState(new FinishedState());
+        sprint.notifyObservers(`Sprint end date (${sprint.getEndDate().toLocaleDateString()}) is overdue. The sprint is now set to finshed`);
     }
 
-    start(sprint: Sprint): void {
-        sprint.setState(new ActivatedState());
-        sprint.notifyObservers('Sprint started');
-    }
-
-    finish(sprint: Sprint): void {
-        sprint.notifyObservers('Cannot finish a sprint that has not been started yet');
+    closeSprint(sprint: Sprint): void {
+        sprint.notifyObservers('Cannot close a sprint that has not been started yet');
     }
 
     addBacklogItem(sprint: Sprint, todoList: ListStategy, item: BacklogItem): void {

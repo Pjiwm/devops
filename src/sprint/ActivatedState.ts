@@ -15,8 +15,6 @@ import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
 
 export class ActivatedState implements State {
-
-
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
         sprint.notifyObservers("Cannot set name in an activated sprint.");
     }
@@ -34,24 +32,21 @@ export class ActivatedState implements State {
         sprint.notifyObservers("Cannot remove backlog item in an activated sprint.");
     }
 
-    closeSprint(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot close an activated sprint.");
+    startSprint(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot start an already activated sprint.");
     }
 
-    finishSprint(sprint: Sprint, currentDate: Date): void {
-        if (currentDate < sprint.getEndDate()) {
+    finishSprint(sprint: Sprint): void {
+        if (new Date().getTime() > sprint.getEndDate().getTime()) {
             sprint.notifyObservers("Cannot finish an activated sprint before its end date.");
         }
         sprint.setState(new FinishedState());
     }
 
-    start(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot start an already activated sprint.");
+    closeSprint(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot close an activated sprint.");
     }
 
-    finish(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot finish an already activated sprint.");
-    }
 
     moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void {
         const toBeTested = source instanceof ReadyForTestingList;
@@ -102,7 +97,6 @@ export class ActivatedState implements State {
                     .notifyObservers(`${person.getUsername()} canceled the test of ${item.getTitle()}
                     assigneed to: ${item.getAssignee()?.getUsername()}`);
             }
-
         }
     }
 }
