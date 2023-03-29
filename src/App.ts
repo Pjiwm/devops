@@ -65,12 +65,20 @@ let sprint = scrumMaster.roleActions().createSprint(scrumMaster)
     .addName("Release: Stable videogame")
     .addMembers([developer, leadDeveloper, scrumMaster, tester])
     .addType(SprintType.Release)
-    .addSprintBackLog(new SprintBacklogFactory().create(lists, new Repository("Project", "Master")))
+    .addSprintBackLog(new SprintBacklogFactory().create([], new Repository("Project", "Master")))
     .build();
 
 
 let logObserver = new SprintLogObserver();
 sprint.addObserver(logObserver);
-sprint.setName("hoi")
+
+// Add backlog items
+// sprint.addBacklogItem(items[0])
+
+
+
 sprint.start(scrumMaster);
+
+sprint.setName("Release: New Stable video game") // Should return error
+
 console.log(sprint.getName());

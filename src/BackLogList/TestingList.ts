@@ -1,10 +1,9 @@
 import { BacklogItem } from "../BackLogItem";
-import { SprintBacklog } from "../SprintBackLog";
-import { Observer } from "../Observer/Observer";
 import { ListStategy } from "./ListStategy";
+import { Observer } from "../Observer/Observer";
 
-// TodoList class (Concrete Strategy)
-export class TodoList extends ListStategy {
+// TestingList class (Concrete Strategy)
+export class TestingList extends ListStategy {
 
     constructor(name: string) {
         super(name);
@@ -12,6 +11,10 @@ export class TodoList extends ListStategy {
 
     public getName(): string {
         return this.getName();
+    }
+
+    public getBacklogItems(): BacklogItem[] {
+        return this.getBacklogItems();
     }
 
     contains(backlogItem: BacklogItem): boolean {
@@ -27,9 +30,5 @@ export class TodoList extends ListStategy {
         if (index !== -1) {
             this.getBacklogItems().splice(index, 1);
         }
-    }
-
-    public getBacklogItems(): BacklogItem[] {
-        return this.getBacklogItems();
     }
 }

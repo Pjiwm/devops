@@ -30,16 +30,24 @@ export class SprintBacklog implements Subject {
         return this.backlogLists[0];
     }
 
-    public getInProgressList(): ListStategy {
+    public getDoingList(): ListStategy {
         return this.backlogLists[1];
+    }
+
+    public getReadyForTesting(): ListStategy {
+        return this.backlogLists[2];
+    }
+
+    public getTestingList(): ListStategy {
+        return this.backlogLists[this.backlogLists.length - 3];
+    }
+
+    public getTestedList(): ListStategy {
+        return this.backlogLists[this.backlogLists.length - 2];
     }
 
     public getDoneList(): ListStategy {
         return this.backlogLists[this.backlogLists.length - 1];
-    }
-
-    public getTestingList(): ListStategy {
-        return this.backlogLists[this.backlogLists.length - 2];
     }
 
     public getRepository(): Repository {

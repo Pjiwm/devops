@@ -1,6 +1,6 @@
 import { BacklogItem } from "../BackLogItem";
 import { ListStategy } from "../BackLogList/ListStategy";
-import { TestList } from "../BackLogList/TestList";
+import { ReadyForTestingList } from "../BackLogList/ReadyForTestingList";
 import { Tester } from "../Roles/Tester";
 import { FinishedState } from "./FinishedState";
 import { Sprint } from "./Sprint";
@@ -65,7 +65,7 @@ export class ActivatedState implements State {
             sourceList.removeBacklogItem(item);
             destinationList.addBacklogItem(item);
 
-            if (destinationList instanceof TestList) {
+            if (destinationList instanceof ReadyForTestingList) {
                 sprint.getMembers().forEach(member => {
                     if (member.roleActions() instanceof Tester) {
                         member.notifyObservers("A new item has been added ready for testing.");

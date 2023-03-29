@@ -25,17 +25,18 @@ export class CreatedState implements State {
         throw new Error("Method not implemented.");
     }
 
-  closeSprint(sprint: Sprint): void {
+    closeSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
 
-  finishSprint(sprint: Sprint): void {
+    finishSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
 
-  changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
+    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         throw new Error("Method not implemented.");
     }
+
     start(sprint: Sprint): void {
         sprint.setState(new ActivatedState());
         sprint.notifyObservers('Sprint started');

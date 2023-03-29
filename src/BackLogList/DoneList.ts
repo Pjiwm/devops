@@ -9,9 +9,12 @@ export class DoneList extends ListStategy {
         super(name);
     }
 
+    public getName(): string {
+        return this.getName()
+    }
+
     contains(backlogItem: BacklogItem): boolean {
         return this.getBacklogItems().includes(backlogItem);
-
     }
 
     public addBacklogItem(backlogItem: BacklogItem): void {
@@ -27,9 +30,5 @@ export class DoneList extends ListStategy {
 
     public getBacklogItems(): BacklogItem[] {
         return this.getBacklogItems();
-    }
-
-    public getName(): string {
-        return this.getName()
     }
 }
