@@ -3,9 +3,6 @@ console.log("test")
 import { SlackNotifier } from "./Observer/SlackNotifier";
 import { EmailNotifier } from "./Observer/EmailNotifier";
 import { BacklogItem } from "./BackLogItem";
-import { DoingList } from "./BackLogList/DoingList";
-import { DoneList } from "./BackLogList/DoneList";
-import { TodoList } from "./BackLogList/TodoList";
 import { SprintBacklogFactory } from "./BackLogFactory/SprintBackLogFactory";
 import { PersonFactory } from "./PersonFactory";
 import { ScrumMaster } from "./Roles/ScrumMaster";
@@ -59,8 +56,8 @@ let items = [
 ];
 
 let sprint = scrumMaster.roleActions().createSprint(scrumMaster, leadDeveloper)
-    .addStartDate(new Date("2023-09-01"))
-    .addEndDate(new Date("2023-09-21"))
+    .addStartDate(new Date("2023-03-24"))
+    .addEndDate(new Date("2023-04-28"))
     .addName("Release: Stable videogame")
     .addMembers([developer, tester])
     .addType(SprintType.Release)
@@ -78,6 +75,9 @@ sprint.addBacklogItem(items[0])
 sprint.start(scrumMaster);
 
 sprint.setName("Release: New Stable video game") // Should return error
+console.log(sprint.getName());
+
+// Testing permissions moving items
 let todo = sprint.getTodoList()
 let readyTesting = sprint.getReadyForTestingList()
 let doing = sprint.getDoingList()
@@ -124,15 +124,16 @@ sprint.changeBacklogItemPosition(tester, item, tested, doing);
 console.log("\nLead developer verplaatst iets:")
 sprint.changeBacklogItemPosition(leadDeveloper, item, tested, done);
 
+
 const pipelineJobs = [
     new InstallPackagesJob(),
     new BuildJob(),
     new TestJob(),
     new DeployJob(),
-  ];
+];
 
-  const pipelineJobRunner = new Pipeline();
+const pipelineJobRunner = new Pipeline();
 
-  for (const job of pipelineJobs) {
+for (const job of pipelineJobs) {
     job.accept(pipelineJobRunner);
-  }
+}

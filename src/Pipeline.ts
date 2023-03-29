@@ -7,7 +7,7 @@ import { TestJob } from "./Jobs/TestJob";
 
 export class Pipeline implements JobVisitor {
     private id: string;
-    constructor () {
+    constructor() {
         this.id = nanoid();
     }
 
@@ -16,21 +16,21 @@ export class Pipeline implements JobVisitor {
     }
 
     visitInstallingPackagesJob(job: InstallPackagesJob): boolean {
-      return true;
+        return true;
     }
 
     visitBuildJob(job: BuildJob): boolean {
-      // Implementation for running the BuildJob
-      return true;
+        // Implementation for running the BuildJob
+        return true;
     }
 
     visitTestJob(job: TestJob): boolean {
-      // Implementation for running the TestJob
-      return true;
+        // Implementation for running the TestJob
+        return true;
     }
 
     visitDeployJob(job: DeployJob): boolean {
-      // Implementation for running the DeployJob
-      return true;
+        // Implementation for running the DeployJob
+        return true;
     }
-  }
+}

@@ -5,6 +5,7 @@ import { Role } from "../Roles/Role";
 import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
+import { ClosedState } from "./ClosedState";
 
 export class FinishedState implements State {
 
@@ -31,21 +32,17 @@ export class FinishedState implements State {
         sprint.notifyObservers("Cannot remove backlog item from a finished sprint.");
     }
 
-
-    closeSprint(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot close a sprint that is already finished.");
+    startSprint(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot start a sprint that is already finished.");
     }
 
     finishSprint(sprint: Sprint): void {
         sprint.notifyObservers("Cannot finish a sprint that is already finished.");
     }
 
-    start(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot start a sprint that is already finished.");
-    }
-
-    finish(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot finish a sprint that is already finished.");
+    closeSprint(sprint: Sprint): void {
+        sprint.setState(new ClosedState());
+        sprint.notifyObservers('Sprint closed');
     }
 
 }

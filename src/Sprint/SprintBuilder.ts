@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { SprintBacklogFactory } from "../BackLogFactory/SprintBackLogFactory";
 import { Person } from "../Person";
+import { Pipeline } from "../Pipeline";
 import { Repository } from "../Repository";
 import { LeadDeveloper } from "../Roles/LeadDeveloper";
 import { Role } from "../Roles/Role";
@@ -18,6 +19,7 @@ export class SprintBuilder {
     private members: Person<Role>[] | undefined;
     private scrumMaster: Person<ScrumMaster>;
     private leadDeveloper: Person<LeadDeveloper>
+    private pipeline: Pipeline | undefined;
 
     constructor(scrumMaster: Person<ScrumMaster>, leadDeveloper: Person<LeadDeveloper>) {
         this.scrumMaster = scrumMaster;
@@ -62,6 +64,11 @@ export class SprintBuilder {
         return this;
     }
 
+    public addPipeline(pipeline: Pipeline): SprintBuilder {
+        this.pipeline = pipeline;
+        return this;
+    }
+
     public build(): Sprint {
         let id = nanoid();
         if (this.sprintBacklog === undefined) {
@@ -85,8 +92,23 @@ export class SprintBuilder {
         if (this.members === undefined) {
             this.members = [];
         }
+
+        if (this.pipeline === undefined) {
+            this.pipeline = new Pipeline();
+        }
+
         let sprint =
-            new Sprint(this.scrumMaster, this.leadDeveloper, this.members, this.sprintBacklog, this.startDate, this.endDate, this.name, this.type);
+            new Sprint(
+                this.scrumMaster,
+                this.leadDeveloper,
+                this.members,
+                this.sprintBacklog,
+                this.startDate,
+                this.endDate,
+                this.name,
+                this.type,
+                this.pipeline
+            );
         sprint.setId(id);
         return sprint;
     }
