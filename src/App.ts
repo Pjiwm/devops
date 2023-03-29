@@ -15,6 +15,11 @@ import { Repository } from "./Repository";
 import { SprintType } from "./Sprint/Type";
 import { SprintLogObserver } from "./Observer/SprintLogObserver";
 import { Developer } from "./Roles/Developer";
+import { Pipeline } from "./Pipeline";
+import { BuildJob } from "./Jobs/BuildJob";
+import { DeployJob } from "./Jobs/DeployJob";
+import { InstallPackagesJob } from "./Jobs/InstallPackagesJob";
+import { TestJob } from "./Jobs/TestJob";
 
 // Example usage
 
@@ -118,3 +123,16 @@ sprint.changeBacklogItemPosition(tester, item, tested, doing);
 
 console.log("\nLead developer verplaatst iets:")
 sprint.changeBacklogItemPosition(leadDeveloper, item, tested, done);
+
+const pipelineJobs = [
+    new InstallPackagesJob(),
+    new BuildJob(),
+    new TestJob(),
+    new DeployJob(),
+  ];
+
+  const pipelineJobRunner = new Pipeline();
+
+  for (const job of pipelineJobs) {
+    job.accept(pipelineJobRunner);
+  }
