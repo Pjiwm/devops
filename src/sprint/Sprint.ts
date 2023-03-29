@@ -15,7 +15,6 @@ import { LeadDeveloper } from '../Roles/LeadDeveloper';
 import { Tester } from '../Roles/Tester';
 
 export class Sprint implements Subject {
-
     private members: Person<Role>[];
     private backlog: SprintBacklog;
     private props: SprintProperties;
@@ -37,7 +36,7 @@ export class Sprint implements Subject {
         this.scrumMaster = scrumMaster;
         this.leadDeveloper = leadDeveloper;
 
-        this.members.forEach(member => { 
+        this.members.forEach(member => {
             if(member.roleActions() instanceof Tester) {
                 this.backlog.getReadyForTesting().addPerson(member);
             }
@@ -60,8 +59,24 @@ export class Sprint implements Subject {
         return this.backlog.getTodoList();
     }
 
+    getDoingList(): ListStategy {
+        return this.backlog.getDoingList();
+    }
+
     getReadyForTestingList(): ListStategy {
         return this.backlog.getReadyForTesting();
+    }
+
+    getTestingList() {
+        return this.backlog.getTestingList();
+    }
+
+    getTestedList(): ListStategy {
+        return this.backlog.getTestedList();
+    }
+
+    getDoneList(): ListStategy {
+        return this.backlog.getDoneList();
     }
 
     getStartDate(): Date {
@@ -167,8 +182,8 @@ export class Sprint implements Subject {
         return this.backlog.getBacklogLists();
     }
 
-    changeBacklogItemPosition(item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
-        this.state.changeBacklogItemPosition(this, item, sourceList, destinationList);
+    changeBacklogItemPosition(person: Person<Role>, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
+        this.state.moveBackLogItem(this, person, item, sourceList, destinationList);
     }
 
 }

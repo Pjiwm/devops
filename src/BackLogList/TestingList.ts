@@ -11,14 +11,6 @@ export class TestingList extends ListStategy {
         super(name);
     }
 
-    public getName(): string {
-        return this.getName();
-    }
-
-    public getBacklogItems(): BacklogItem[] {
-        return this.backlogItems;
-    }
-
     contains(backlogItem: BacklogItem): boolean {
         return this.getBacklogItems().includes(backlogItem);
     }

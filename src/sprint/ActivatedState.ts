@@ -1,6 +1,13 @@
 import { BacklogItem } from "../BackLogItem";
+import { DoneList } from "../BackLogList/DoneList";
 import { ListStategy } from "../BackLogList/ListStategy";
 import { ReadyForTestingList } from "../BackLogList/ReadyForTestingList";
+import { TestedList } from "../BackLogList/TestedList";
+import { TestingList } from "../BackLogList/TestingList";
+import { TodoList } from "../BackLogList/TodoList";
+import { Person } from "../Person";
+import { LeadDeveloper } from "../Roles/LeadDeveloper";
+import { Role } from "../Roles/Role";
 import { Tester } from "../Roles/Tester";
 import { FinishedState } from "./FinishedState";
 import { Sprint } from "./Sprint";
@@ -8,6 +15,7 @@ import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
 
 export class ActivatedState implements State {
+
 
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
         sprint.notifyObservers("Cannot set name in an activated sprint.");
@@ -18,23 +26,12 @@ export class ActivatedState implements State {
     setEndDate(sprint: Sprint, props: SprintProperties, endDate: Date): void {
         sprint.notifyObservers("Cannot set end date in an activated sprint.");
     }
-    addBacklogItem(sprint: Sprint, todoList: ListStategy,  item: BacklogItem): void {
+    addBacklogItem(sprint: Sprint, todoList: ListStategy, item: BacklogItem): void {
         sprint.notifyObservers("Cannot add backlog item in an activated sprint.");
     }
 
     removeBacklogItem(sprint: Sprint, item: BacklogItem): void {
         sprint.notifyObservers("Cannot remove backlog item in an activated sprint.");
-    }
-
-    moveBacklogItem(sprint: Sprint, item: BacklogItem, targetList: ListStategy): void {
-        if (targetList !== sprint.getTodoList()) {
-            sprint.notifyObservers("Cannot move backlog items from/to the Todo list in an activated sprint.");
-        }
-        const sourceList = sprint.findBacklogList(item);
-        if (sourceList !== targetList) {
-            sourceList?.removeBacklogItem(item);
-            targetList.addBacklogItem(item);
-        }
     }
 
     closeSprint(sprint: Sprint): void {
@@ -56,10 +53,56 @@ export class ActivatedState implements State {
         sprint.notifyObservers("Cannot finish an already activated sprint.");
     }
 
-    changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
-        if (sourceList !== destinationList) {
-            sourceList.removeBacklogItem(item);
-            destinationList.addBacklogItem(item);
+    moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void {
+        const toBeTested = source instanceof ReadyForTestingList;
+        const toBeDone = destination instanceof DoneList;
+        const toBeCanceled = destination instanceof TodoList;
+        const beingTested = source instanceof TestingList;
+        const inTested = source instanceof TestedList;
+        const toDoing = destination instanceof TodoList;
+
+        if (source.contains(item) === false) {
+            sprint.notifyObservers(`${item.getTitle()} is not in the ${source.getName()} list.`);
+            return;
+        }
+
+        if (source instanceof DoneList) {
+            sprint.notifyObservers(`${item.getTitle()} is already in the done list.`);
+        }
+
+        if (!sprint.getMembers().includes(person)) {
+            sprint.notifyObservers(`${person.getUsername()} is not a member of this sprint.`);
+            return;
+        }
+
+        if ((toBeTested || beingTested) && !(person.roleActions() instanceof Tester)) {
+            let msg = "is not a tester and cannot move a backlog item from the tested list.";
+            sprint.notifyObservers(`${person.getUsername()} ${msg}`);
+            return;
+        }
+
+        if ((inTested || toBeDone) && !(person.roleActions() instanceof LeadDeveloper)) {
+            let msg = "is not a lead developer and cannot move a backlog item from the tested list.";
+            sprint.notifyObservers(`${person.getUsername()} ${msg}`);
+            return;
+        }
+
+        if (inTested && toDoing) {
+            sprint.notifyObservers(`${item.getTitle()} Items in testeed cannot be moved to todo.`);
+            return;
+        }
+
+
+        if (source !== destination) {
+            source.removeBacklogItem(item);
+            destination.addBacklogItem(item);
+
+            if (toBeCanceled) {
+                sprint.getScrumMaster()
+                    .notifyObservers(`${person.getUsername()} canceled the test of ${item.getTitle()}
+                    assigneed to: ${item.getAssignee()?.getUsername()}`);
+            }
+
         }
     }
 }
