@@ -4,8 +4,8 @@ import { Observer } from "../Observer/Observer";
 // ListStategy interface (Strategy)
 export abstract class ListStategy {
 
-    private backlogItems: BacklogItem[];
-    private name: string;
+    protected backlogItems: BacklogItem[];
+    protected name: string;
 
     constructor(name: string) {
         this.backlogItems = [];

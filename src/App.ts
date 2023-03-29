@@ -65,7 +65,7 @@ let sprint = scrumMaster.roleActions().createSprint(scrumMaster)
     .addName("Release: Stable videogame")
     .addMembers([developer, leadDeveloper, scrumMaster, tester])
     .addType(SprintType.Release)
-    .addSprintBackLog(new SprintBacklogFactory().create([], new Repository("Project", "Master")))
+    .addSprintBackLog(new SprintBacklogFactory().create(new Repository("Project", "Master")))
     .build();
 
 
@@ -73,8 +73,7 @@ let logObserver = new SprintLogObserver();
 sprint.addObserver(logObserver);
 
 // Add backlog items
-// sprint.addBacklogItem(items[0])
-
+sprint.addBacklogItem(items[0])
 
 
 sprint.start(scrumMaster);

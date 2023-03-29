@@ -11,11 +11,10 @@ import { SprintBacklog } from "../SprintBackLog";
 
 export class SprintBacklogFactory implements SprintBacklogFactory {
 
-    create(extraLists: ListStategy[], repository: Repository): SprintBacklog {
+    create(repository: Repository): SprintBacklog {
         let lists = new Array<ListStategy>();
         lists.push(new TodoList("Todo"));
         lists.push(new DoingList("Doing"));
-        lists.concat(extraLists);
         lists.push(new ReadyForTestingList("Ready for testing"));
         lists.push(new TestingList("Testing"));
         lists.push(new TestedList("Tested"));
