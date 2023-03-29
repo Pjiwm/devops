@@ -11,7 +11,7 @@ export class TodoList extends ListStategy {
     }
 
     public getName(): string {
-        return this.getName();
+        return this.name;
     }
 
     contains(backlogItem: BacklogItem): boolean {
@@ -30,6 +30,6 @@ export class TodoList extends ListStategy {
     }
 
     public getBacklogItems(): BacklogItem[] {
-        return this.getBacklogItems();
+        return this.backlogItems
     }
 }
