@@ -13,6 +13,7 @@ import { SprintProperties } from './SprintProperties';
 import { ListStategy } from '../BackLogList/ListStategy';
 import { LeadDeveloper } from '../Roles/LeadDeveloper';
 import { Tester } from '../Roles/Tester';
+import { Pipeline } from '../Pipeline';
 import { ActivatedState } from './ActivatedState';
 
 export class Sprint implements Subject {
@@ -24,9 +25,20 @@ export class Sprint implements Subject {
     private id: string;
     private scrumMaster: Person<ScrumMaster>;
     private leadDeveloper: Person<LeadDeveloper>
+    private pipeline: Pipeline;
     readonly sprintType: SprintType;
 
-    constructor(scrumMaster: Person<ScrumMaster>, leadDeveloper: Person<LeadDeveloper>, members: Person<Role>[], backlog: SprintBacklog, startDate: Date, endDate: Date, name: string, type: SprintType) {
+    constructor(
+        scrumMaster: Person<ScrumMaster>,
+        leadDeveloper: Person<LeadDeveloper>,
+        members: Person<Role>[],
+        backlog: SprintBacklog,
+        startDate: Date,
+        endDate: Date,
+        name: string,
+        type: SprintType,
+        pipeline: Pipeline) {
+
         members.push(scrumMaster, leadDeveloper);
         this.members = members;
         this.backlog = backlog;
@@ -36,12 +48,13 @@ export class Sprint implements Subject {
         this.sprintType = type;
         this.scrumMaster = scrumMaster;
         this.leadDeveloper = leadDeveloper;
+        this.pipeline = pipeline;
 
         this.members.forEach(member => {
-            if(member.roleActions() instanceof Tester) {
+            if (member.roleActions() instanceof Tester) {
                 this.backlog.getReadyForTesting().addPerson(member);
             }
-         })
+        })
     }
 
     getScrumMaster(): Person<ScrumMaster> {
@@ -98,6 +111,14 @@ export class Sprint implements Subject {
 
     getId(): string {
         return this.id;
+    }
+
+    getPipeline(): Pipeline {
+        return this.pipeline;
+    }
+
+    setPipeline(pipeline: Pipeline): void {
+        this.pipeline = pipeline;
     }
 
     setId(id: string): void {
@@ -189,6 +210,14 @@ export class Sprint implements Subject {
 
     changeBacklogItemPosition(person: Person<Role>, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         this.state.moveBackLogItem(this, person, item, sourceList, destinationList);
+    }
+
+    startPipeline(person: Person<Role>): void {
+        if (person === this.scrumMaster) {
+            // this.state.startPipeline(this, person);
+        } else {
+            this.notifyObservers(`A pipeline can only be started by the scrum master`);
+        }
     }
 
 }
