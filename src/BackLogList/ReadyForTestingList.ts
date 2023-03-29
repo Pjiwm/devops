@@ -1,17 +1,16 @@
 import { BacklogItem } from "../BackLogItem";
-import { SprintBacklog } from "../SprintBackLog";
 import { Observer } from "../Observer/Observer";
 import { ListStategy } from "./ListStategy";
 
-// TodoList class (Concrete Strategy)
-export class TodoList extends ListStategy {
+// ReadyForTestingList class (Concrete Strategy)
+export class ReadyForTestingList extends ListStategy {
 
     constructor(name: string) {
         super(name);
     }
 
     public getName(): string {
-        return this.getName();
+        return this.getName()
     }
 
     contains(backlogItem: BacklogItem): boolean {

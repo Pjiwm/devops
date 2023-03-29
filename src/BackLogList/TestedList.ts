@@ -2,18 +2,18 @@ import { BacklogItem } from "../BackLogItem";
 import { ListStategy } from "./ListStategy";
 import { Observer } from "../Observer/Observer";
 
-// TestList class (Concrete Strategy)
-export class TestList extends ListStategy {
+// TestedList class (Concrete Strategy)
+export class TestedList extends ListStategy {
 
     constructor(name: string) {
         super(name);
     }
 
-    getName(): string {
+    public getName(): string {
         return this.getName();
     }
 
-    getBacklogItems(): BacklogItem[] {
+    public getBacklogItems(): BacklogItem[] {
         return this.getBacklogItems();
     }
 
@@ -21,11 +21,11 @@ export class TestList extends ListStategy {
         return this.getBacklogItems().includes(backlogItem);
     }
 
-    addBacklogItem(backlogItem: BacklogItem): void {
+    public addBacklogItem(backlogItem: BacklogItem): void {
         this.getBacklogItems().push(backlogItem);
     }
 
-    removeBacklogItem(backlogItem: BacklogItem): void {
+    public removeBacklogItem(backlogItem: BacklogItem): void {
         const index = this.getBacklogItems().indexOf(backlogItem);
         if (index !== -1) {
             this.getBacklogItems().splice(index, 1);
