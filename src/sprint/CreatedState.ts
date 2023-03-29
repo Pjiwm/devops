@@ -4,6 +4,7 @@ import { Sprint } from "./Sprint";
 import { State } from "./SprintState";
 import { ActivatedState } from "./ActivatedState";
 import { SprintProperties } from "./SprintProperties";
+import { FinishedState } from "./FinishedState";
 
 export class CreatedState implements State {
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
@@ -25,25 +26,26 @@ export class CreatedState implements State {
         throw new Error("Method not implemented.");
     }
 
-    closeSprint(sprint: Sprint): void {
-        throw new Error("Method not implemented.");
+    start(sprint: Sprint): void {
+        if (new Date().getTime() > sprint.getEndDate().getTime()) {
+            this.finishSprint(sprint);
+        } else {
+            sprint.setState(new ActivatedState());
+            sprint.notifyObservers('Sprint started');
+        }
     }
 
     finishSprint(sprint: Sprint): void {
+        sprint.setState(new FinishedState());
+        sprint.notifyObservers(`Sprint end date (${sprint.getEndDate().toLocaleDateString()}) is overdue. The sprint is now set to finshed`);
+    }
+
+    closeSprint(sprint: Sprint): void {
         throw new Error("Method not implemented.");
     }
 
     changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         throw new Error("Method not implemented.");
-    }
-
-    start(sprint: Sprint): void {
-        sprint.setState(new ActivatedState());
-        sprint.notifyObservers('Sprint started');
-    }
-
-    finish(sprint: Sprint): void {
-        sprint.notifyObservers('Cannot finish a sprint that has not been started yet');
     }
 
     addBacklogItem(sprint: Sprint, todoList: ListStategy, item: BacklogItem): void {

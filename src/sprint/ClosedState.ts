@@ -4,7 +4,8 @@ import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
 
-class ClosedState implements State {
+export class ClosedState implements State {
+
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
         sprint.notifyObservers("Cannot set name in a closed sprint.");
     }
@@ -26,16 +27,16 @@ class ClosedState implements State {
         sprint.notifyObservers("Cannot move backlog item in closed sprint.");
     }
 
-    closeSprint(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot close a sprint that is already closed.");
+    start(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot start a closed sprint.");
     }
 
     finishSprint(sprint: Sprint): void {
         sprint.notifyObservers("Cannot finish a sprint that is already closed.");
     }
-
-    start(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot start a closed sprint.");
+    
+    closeSprint(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot close a sprint that is already closed.");
     }
 
     finish(sprint: Sprint): void {

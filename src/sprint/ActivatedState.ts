@@ -37,23 +37,19 @@ export class ActivatedState implements State {
         }
     }
 
-    closeSprint(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot close an activated sprint.");
-    }
-
-    finishSprint(sprint: Sprint, currentDate: Date): void {
-        if (currentDate < sprint.getEndDate()) {
-            sprint.notifyObservers("Cannot finish an activated sprint before its end date.");
-        }
-        sprint.setState(new FinishedState());
-    }
-
     start(sprint: Sprint): void {
         sprint.notifyObservers("Cannot start an already activated sprint.");
     }
 
-    finish(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot finish an already activated sprint.");
+    closeSprint(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot close an activated sprint.");
+    }
+
+    finishSprint(sprint: Sprint): void {
+        if (new Date().getTime() > sprint.getEndDate().getTime()) {
+            sprint.notifyObservers("Cannot finish an activated sprint before its end date.");
+        }
+        sprint.setState(new FinishedState());
     }
 
     changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {

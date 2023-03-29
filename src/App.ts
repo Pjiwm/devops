@@ -54,8 +54,8 @@ let items = [
 ];
 
 let sprint = scrumMaster.roleActions().createSprint(scrumMaster, leadDeveloper)
-    .addStartDate(new Date("2023-09-01"))
-    .addEndDate(new Date("2023-09-21"))
+    .addStartDate(new Date("2023-03-24"))
+    .addEndDate(new Date("2023-04-28"))
     .addName("Release: Stable videogame")
     .addMembers([developer, tester])
     .addType(SprintType.Release)
@@ -73,6 +73,7 @@ sprint.addBacklogItem(items[0])
 sprint.start(scrumMaster);
 
 sprint.setName("Release: New Stable video game") // Should return error
+
 let sourceList = sprint.getTodoList()
 let destinationList = sprint.getReadyForTestingList()
 let item = sourceList.getBacklogItems()[0];

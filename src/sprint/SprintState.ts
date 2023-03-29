@@ -10,10 +10,9 @@ interface State {
     setName(sprint: Sprint, props: SprintProperties, name: string): void;
     setStartDate(sprint: Sprint, props: SprintProperties, startDate: Date): void;
     setEndDate(sprint: Sprint, props: SprintProperties, startDate: Date): void;
-    closeSprint(sprint: Sprint): void;
-    finishSprint(sprint: Sprint, currentDate: Date): void;
     start(sprint: Sprint): void;
-    finish(sprint: Sprint): void;
+    finishSprint(sprint: Sprint): void;
+    closeSprint(sprint: Sprint): void;
     changeBacklogItemPosition(sprint: Sprint, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void;
 }
 

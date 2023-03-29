@@ -13,6 +13,7 @@ import { SprintProperties } from './SprintProperties';
 import { ListStategy } from '../BackLogList/ListStategy';
 import { LeadDeveloper } from '../Roles/LeadDeveloper';
 import { Tester } from '../Roles/Tester';
+import { ActivatedState } from './ActivatedState';
 
 export class Sprint implements Subject {
 
@@ -138,7 +139,7 @@ export class Sprint implements Subject {
         this.notifyObservers(`Sprint: ${action}`);
     }
 
-    start(person: Person<Role>): void {
+    start(person: Person<Role>): void {        
         if(person === this.getScrumMaster()) {
             this.state.start(this);
         } else {
@@ -147,7 +148,11 @@ export class Sprint implements Subject {
     }
 
     finish(): void {
-        this.state.finish(this);
+        this.state.finishSprint(this);
+    }
+
+    close(): void {
+        this.state.closeSprint(this);
     }
 
     addBacklogItem(item: BacklogItem): void {
