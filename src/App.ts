@@ -17,6 +17,7 @@ import { BuildJob } from "./Jobs/BuildJob";
 import { DeployJob } from "./Jobs/DeployJob";
 import { InstallPackagesJob } from "./Jobs/InstallPackagesJob";
 import { TestJob } from "./Jobs/TestJob";
+import { Thread } from "./Thread/Thread";
 
 // Example usage
 
@@ -137,3 +138,66 @@ const pipelineJobRunner = new Pipeline();
 for (const job of pipelineJobs) {
     job.accept(pipelineJobRunner);
 }
+
+
+let bobDev = personFactory.createPerson(new Developer(), "Bob");
+let henkDev = personFactory.createPerson(new Developer(), "Henk");
+let testerDeZwart = personFactory.createPerson(new Tester(), "M. de Zwart");
+let pimLead = personFactory.createPerson(new LeadDeveloper(), "Pim");
+let masterMelvin = personFactory.createPerson(new ScrumMaster(), "Melvin");
+let gekkeHenkie = personFactory.createPerson(new ScrumMaster(), "Henkie");
+let stijn = personFactory.createPerson(new LeadDeveloper(), "Stijn");
+
+
+let devopsSprint = masterMelvin.roleActions().createSprint(masterMelvin, pimLead)
+.addEndDate(new Date("2023-04-28"))
+.addStartDate(new Date("2023-03-24"))
+.addName("Devops project")
+.addMembers([bobDev, henkDev, testerDeZwart])
+.addType(SprintType.Release)
+.addSprintBackLog(new SprintBacklogFactory().create(new Repository("Devops", "Master")))
+.build();
+
+let logger = new SprintLogObserver();
+devopsSprint.addObserver(logger);
+
+let devopsItems = [
+    new BacklogItem("UX design", "Design UX for login", 10),
+    new BacklogItem("Fix button location", "Get the button centered", 4),
+    new BacklogItem("Password requirements", "Password needs 8 chars", 5),
+    new BacklogItem("Fix stackoverflow in main.ts", "Stack overflow help???", 12),
+];
+
+devopsItems.forEach(item => {
+    devopsSprint.addBacklogItem(item);
+});
+
+devopsSprint.start(masterMelvin);
+
+let thread = new Thread(testerDeZwart, devopsItems[2], devopsSprint, "Passwords are not encrypted in DB");
+let stijnMsg = thread.postMessage(stijn, "Are you all stupid?", new Date());
+stijnMsg?.replyTo(pimLead, "Thank you for your constructive criticism", new Date());
+stijnMsg?.replyTo(stijn, "you're welcome", new Date());
+let henkieMsg = thread.postMessage(gekkeHenkie, "How about you encrypt deez nuts?", new Date());
+henkieMsg?.replyTo(masterMelvin, "I'm not sure if this is a joke or not", new Date());
+henkieMsg?.replyTo(testerDeZwart, "I'm definitely not gonna test deez nuts, melvin can do that.", new Date());
+henkieMsg?.replyTo(masterMelvin, "Oh hell no!", new Date());
+
+thread.getMessages().forEach(msg => {
+    let replies = msg.getReplies();
+    console.log(msg.getAuthor().getUsername() + ": " + msg.getContent());
+    replies.forEach(reply => {
+        console.log("\t" + reply.getAuthor().getUsername() + ": " + reply.getContent());
+    });
+    console.log("========");
+});
+
+
+devopsSprint.changeBacklogItemPosition(testerDeZwart, devopsItems[2], devopsSprint.getTodoList(), devopsSprint.getDoingList());
+console.log(devopsSprint.getDoingList().getBacklogItems()[0].getTitle());
+devopsSprint.changeBacklogItemPosition(testerDeZwart, devopsItems[2], devopsSprint.getDoingList(), devopsSprint.getReadyForTestingList());
+devopsSprint.changeBacklogItemPosition(testerDeZwart, devopsItems[2], devopsSprint.getReadyForTestingList(), devopsSprint.getTestedList());
+devopsSprint.changeBacklogItemPosition(pimLead, devopsItems[2], devopsSprint.getTestedList(), devopsSprint.getDoneList());
+let msg = thread.postMessage(testerDeZwart, "I'm done testing", new Date());
+// should be undefined cause locked
+console.log(msg);
