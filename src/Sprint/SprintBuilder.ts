@@ -6,9 +6,11 @@ import { Repository } from "../Repository";
 import { LeadDeveloper } from "../Roles/LeadDeveloper";
 import { Role } from "../Roles/Role";
 import { ScrumMaster } from "../Roles/ScrumMaster";
+import { ProductOwner } from "../Roles/ProductOwner";
 import { SprintBacklog } from "../SprintBackLog";
 import { Sprint } from "./Sprint";
 import { SprintType } from "./Type";
+import { Job } from "../Jobs/Job";
 
 export class SprintBuilder {
     private sprintBacklog: SprintBacklog | undefined;
@@ -17,11 +19,14 @@ export class SprintBuilder {
     private name: string | undefined;
     private type: SprintType | undefined;
     private members: Person<Role>[] | undefined;
+    private productOwner: Person<ProductOwner>;
     private scrumMaster: Person<ScrumMaster>;
     private leadDeveloper: Person<LeadDeveloper>
     private pipeline: Pipeline | undefined;
+    private pipelineJobs: Job[] | undefined;
 
-    constructor(scrumMaster: Person<ScrumMaster>, leadDeveloper: Person<LeadDeveloper>) {
+    constructor(productOwner: Person<ProductOwner>, scrumMaster: Person<ScrumMaster>, leadDeveloper: Person<LeadDeveloper>) {
+        this.productOwner = productOwner;
         this.scrumMaster = scrumMaster;
         this.leadDeveloper = leadDeveloper;
     }
@@ -69,6 +74,11 @@ export class SprintBuilder {
         return this;
     }
 
+    public addPipelineJobs(pipelineJobs: Job[]): SprintBuilder {
+        this.pipelineJobs = pipelineJobs;
+        return this;
+    }
+
     public build(): Sprint {
         let id = nanoid();
         if (this.sprintBacklog === undefined) {
@@ -96,9 +106,13 @@ export class SprintBuilder {
         if (this.pipeline === undefined) {
             this.pipeline = new Pipeline();
         }
+        if (this.pipelineJobs === undefined) {
+            this.pipelineJobs = [];
+        }
 
         let sprint =
             new Sprint(
+                this.productOwner,
                 this.scrumMaster,
                 this.leadDeveloper,
                 this.members,
@@ -107,7 +121,8 @@ export class SprintBuilder {
                 this.endDate,
                 this.name,
                 this.type,
-                this.pipeline
+                this.pipeline,
+                this.pipelineJobs
             );
         sprint.setId(id);
         return sprint;

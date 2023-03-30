@@ -56,4 +56,8 @@ export class CreatedState implements State {
         sprint.addBacklogItem(item);
         sprint.notifyObservers('Backlog item removed');
     }
+
+    startPipeline(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot start pipeline on an created sprint.");
+    }
 }

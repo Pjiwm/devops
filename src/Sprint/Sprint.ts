@@ -12,9 +12,12 @@ import { ScrumMaster } from '../Roles/ScrumMaster';
 import { SprintProperties } from './SprintProperties';
 import { ListStategy } from '../BackLogList/ListStategy';
 import { LeadDeveloper } from '../Roles/LeadDeveloper';
+import { ProductOwner} from '../Roles/ProductOwner';
 import { Tester } from '../Roles/Tester';
 import { Pipeline } from '../Pipeline';
 import { ActivatedState } from './ActivatedState';
+import * as fs from 'fs';
+import { Job } from '../Jobs/Job';
 
 export class Sprint implements Subject {
     private members: Person<Role>[];
@@ -25,10 +28,13 @@ export class Sprint implements Subject {
     private id: string;
     private scrumMaster: Person<ScrumMaster>;
     private leadDeveloper: Person<LeadDeveloper>
+    private productOwner: Person<ProductOwner>;
     private pipeline: Pipeline;
+    private pipelineJobs: Job[];
     readonly sprintType: SprintType;
 
     constructor(
+        productOwner: Person<ProductOwner>,
         scrumMaster: Person<ScrumMaster>,
         leadDeveloper: Person<LeadDeveloper>,
         members: Person<Role>[],
@@ -37,9 +43,12 @@ export class Sprint implements Subject {
         endDate: Date,
         name: string,
         type: SprintType,
-        pipeline: Pipeline) {
+        pipeline: Pipeline,
+        pipelineJobs: Job[]
+        ) {
 
         members.push(scrumMaster, leadDeveloper);
+        this.productOwner = productOwner;
         this.members = members;
         this.backlog = backlog;
         this.props = new SprintProperties(name, startDate, endDate);
@@ -49,12 +58,17 @@ export class Sprint implements Subject {
         this.scrumMaster = scrumMaster;
         this.leadDeveloper = leadDeveloper;
         this.pipeline = pipeline;
+        this.pipelineJobs = pipelineJobs;
 
         this.members.forEach(member => {
             if (member.roleActions() instanceof Tester) {
                 this.backlog.getReadyForTesting().addPerson(member);
             }
         })
+    }
+
+    getProductOwner(): Person<ProductOwner> {
+        return this.productOwner;
     }
 
     getScrumMaster(): Person<ScrumMaster> {
@@ -115,6 +129,10 @@ export class Sprint implements Subject {
 
     getPipeline(): Pipeline {
         return this.pipeline;
+    }
+
+    getPipelineJobs(): Job[] {
+        return this.pipelineJobs;
     }
 
     setPipeline(pipeline: Pipeline): void {
@@ -212,12 +230,35 @@ export class Sprint implements Subject {
         this.state.moveBackLogItem(this, person, item, sourceList, destinationList);
     }
 
-    startPipeline(person: Person<Role>): void {
-        if (person === this.scrumMaster) {
-            // this.state.startPipeline(this, person);
+    review(txtFile: string): void {
+        if(this.sprintType == SprintType.Review) {
+            // Read the contents of the file
+            const fileContents = fs.readFileSync(txtFile, 'utf-8');
+            
+            // Log the contents of the file to the console
+            console.log(`Reviewing file: ${txtFile}`);
+            console.log(`File contents: \n${fileContents}`);
         } else {
-            this.notifyObservers(`A pipeline can only be started by the scrum master`);
+            this.notifyObservers(`The current sprint is not a review sprint!`);
         }
+    }
+
+    release(isApproved: boolean): void {
+        if(this.sprintType == SprintType.Release) {
+            if(isApproved) {
+                this.startPipeline();
+            } else {
+                this.productOwner.notifyObservers(`The sprint: '${this.props.getName()}' has been cancelled`)
+                this.scrumMaster.notifyObservers(`The sprint: '${this.props.getName()}' has been cancelled`)
+                this.state.closeSprint(this);
+            }
+        } else {
+            this.notifyObservers(`The current sprint is not a release sprint!`);
+        }
+    }
+
+    startPipeline(): void {
+        this.state.startPipeline(this);
     }
 
 }
