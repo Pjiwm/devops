@@ -64,7 +64,7 @@ let items = [
 const pipelineJobs = [
     new InstallPackagesJob(),
     new BuildJob(),
-    // new FailingJob(),
+    new FailingJob(),
     new TestJob(),
     new DeployJob(),
 ];
@@ -141,8 +141,10 @@ sprint.changeBacklogItemPosition(leadDeveloper, item, tested, done);
 
 sprint.finish();
 
-let isApproved = true;
+let isApproved = false;
 sprint.release(isApproved);
+sprint.release(true);
+
 
 
 const txtFilePath = path.join(__dirname, '..', 'reviewDocs', 'review.txt');

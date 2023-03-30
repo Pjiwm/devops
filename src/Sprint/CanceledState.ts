@@ -6,49 +6,48 @@ import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
 import { ClosedState } from "./ClosedState";
-import { CanceledState } from "./CanceledState";
 import { Pipeline } from "../Pipeline";
 import { BuildJob } from "../Jobs/BuildJob";
 import { DeployJob } from "../Jobs/DeployJob";
 import { InstallPackagesJob } from "../Jobs/InstallPackagesJob";
 import { TestJob } from "../Jobs/TestJob";
+import { FinishedState } from "./FinishedState";
 
-export class FinishedState implements State {
+export class CanceledState implements State {
 
     moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void {
-        sprint.notifyObservers("Cannot move backlog item in a finished sprint.");
+        sprint.notifyObservers("Cannot move backlog item in a canceled sprint.");
     }
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
-        sprint.notifyObservers("Cannot set name in a finshed sprint.");
+        sprint.notifyObservers("Cannot set name in a canceled sprint.");
     }
 
     setStartDate(sprint: Sprint, props: SprintProperties, startDate: Date): void {
-        sprint.notifyObservers("Cannot set start date in a finshed sprint.");
+        sprint.notifyObservers("Cannot set start date in a canceled sprint.");
     }
 
     setEndDate(sprint: Sprint, props: SprintProperties, endDate: Date): void {
-        sprint.notifyObservers("Cannot set end date in a finshed sprint.");;
+        sprint.notifyObservers("Cannot set end date in a canceled sprint.");;
     }
 
     addBacklogItem(sprint: Sprint, todoList: ListStategy, item: BacklogItem): void {
-        sprint.notifyObservers("Cannot add backlog item to a finished sprint.");
+        sprint.notifyObservers("Cannot add backlog item to a canceled sprint.");
     }
 
     removeBacklogItem(sprint: Sprint, item: BacklogItem): void {
-        sprint.notifyObservers("Cannot remove backlog item from a finished sprint.");
+        sprint.notifyObservers("Cannot remove backlog item from a canceled sprint.");
     }
 
     startSprint(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot start a sprint that is already finished.");
+        sprint.notifyObservers("Cannot start a sprint that is canceled.");
     }
 
     finishSprint(sprint: Sprint): void {
-        sprint.notifyObservers("Cannot finish a sprint that is already finished.");
+        sprint.notifyObservers("Cannot finish a sprint that is canceled.");
     }
 
     closeSprint(sprint: Sprint): void {
-        sprint.setState(new ClosedState());
-        sprint.notifyObservers('Sprint closed');
+        sprint.notifyObservers("Cannot close a sprint that is canceled.");
     }
 
     startPipeline(sprint: Sprint): void {
@@ -73,8 +72,8 @@ export class FinishedState implements State {
         sprint.getScrumMaster().notifyObservers(`${sprint.getName()} has been succesfully released`);
         sprint.getProductOwner().notifyObservers(`${sprint.getName()} has been succesfully released`);
 
-        this.closeSprint(sprint)
-        // sprint.notifyObservers("Cannot start pipeline on an activated sprint.");
+        sprint.setState(new FinishedState());
+        sprint.close()
     }
 
 }
