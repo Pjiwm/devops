@@ -12,7 +12,7 @@ import { ScrumMaster } from '../Roles/ScrumMaster';
 import { SprintProperties } from './SprintProperties';
 import { ListStategy } from '../BackLogList/ListStategy';
 import { LeadDeveloper } from '../Roles/LeadDeveloper';
-import { ProductOwner} from '../Roles/ProductOwner';
+import { ProductOwner } from '../Roles/ProductOwner';
 import { Tester } from '../Roles/Tester';
 import { Pipeline } from '../Pipeline';
 import { ActivatedState } from './ActivatedState';
@@ -27,10 +27,10 @@ export class Sprint implements Subject {
     private observers: Observer[] = [];
     private id: string;
     private scrumMaster: Person<ScrumMaster>;
-    private leadDeveloper: Person<LeadDeveloper>
     private productOwner: Person<ProductOwner>;
     private pipeline: Pipeline;
     private pipelineJobs: Job[];
+    private associatedThreads: Observer[];
     readonly sprintType: SprintType;
 
     constructor(
@@ -43,9 +43,8 @@ export class Sprint implements Subject {
         endDate: Date,
         name: string,
         type: SprintType,
-        pipeline: Pipeline,
         pipelineJobs: Job[]
-        ) {
+    ) {
 
         members.push(scrumMaster, leadDeveloper);
         this.productOwner = productOwner;
@@ -56,9 +55,9 @@ export class Sprint implements Subject {
         this.id = nanoid();
         this.sprintType = type;
         this.scrumMaster = scrumMaster;
-        this.leadDeveloper = leadDeveloper;
-        this.pipeline = pipeline;
         this.pipelineJobs = pipelineJobs;
+        this.pipeline = new Pipeline();
+        this.associatedThreads = [];
 
         this.members.forEach(member => {
             if (member.roleActions() instanceof Tester) {
@@ -194,7 +193,7 @@ export class Sprint implements Subject {
     }
 
     start(person: Person<Role>): void {
-        if(person === this.getScrumMaster()) {
+        if (person === this.getScrumMaster()) {
             this.state.startSprint(this);
         } else {
             this.notifyObservers(`A sprint can only be started by a scrum master`);
@@ -210,8 +209,7 @@ export class Sprint implements Subject {
     }
 
     addBacklogItem(item: BacklogItem): void {
-        // TODO this can be made better...
-        this.state.addBacklogItem(this, this.getBackLogLists()[0], item);
+        this.state.addBacklogItem(this, this.getTodoList(), item);
     }
 
     swapDeveloper(item: BacklogItem, developer: Person<Role>): void {
@@ -227,14 +225,19 @@ export class Sprint implements Subject {
     }
 
     changeBacklogItemPosition(person: Person<Role>, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
-        this.state.moveBackLogItem(this, person, item, sourceList, destinationList);
+        if (this.members.includes(person)) {
+            this.state.moveBackLogItem(this, person, item, sourceList, destinationList);
+            this.checkThreadStatus();
+        } else {
+            person.notifyObservers(`You are not a member of this sprint!`);
+        }
     }
 
     review(txtFile: string): void {
-        if(this.sprintType == SprintType.Review) {
+        if (this.sprintType == SprintType.Review) {
             // Read the contents of the file
             const fileContents = fs.readFileSync(txtFile, 'utf-8');
-            
+
             // Log the contents of the file to the console
             console.log(`Reviewing file: ${txtFile}`);
             console.log(`File contents: \n${fileContents}`);
@@ -244,8 +247,8 @@ export class Sprint implements Subject {
     }
 
     release(isApproved: boolean): void {
-        if(this.sprintType == SprintType.Release) {
-            if(isApproved) {
+        if (this.sprintType == SprintType.Release) {
+            if (isApproved) {
                 this.startPipeline();
             } else {
                 this.productOwner.notifyObservers(`The sprint: '${this.props.getName()}' has been cancelled`)
@@ -261,4 +264,13 @@ export class Sprint implements Subject {
         this.state.startPipeline(this);
     }
 
+    addAssociatedThread(thread: Observer): void {
+        this.associatedThreads.push(thread);
+    }
+
+    private checkThreadStatus(): void {
+        this.associatedThreads.forEach(thread => {
+            thread.update(this, "");
+        });
+    }
 }

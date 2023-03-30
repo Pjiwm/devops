@@ -22,7 +22,6 @@ export class SprintBuilder {
     private productOwner: Person<ProductOwner>;
     private scrumMaster: Person<ScrumMaster>;
     private leadDeveloper: Person<LeadDeveloper>
-    private pipeline: Pipeline | undefined;
     private pipelineJobs: Job[] | undefined;
 
     constructor(productOwner: Person<ProductOwner>, scrumMaster: Person<ScrumMaster>, leadDeveloper: Person<LeadDeveloper>) {
@@ -69,11 +68,6 @@ export class SprintBuilder {
         return this;
     }
 
-    public addPipeline(pipeline: Pipeline): SprintBuilder {
-        this.pipeline = pipeline;
-        return this;
-    }
-
     public addPipelineJobs(pipelineJobs: Job[]): SprintBuilder {
         this.pipelineJobs = pipelineJobs;
         return this;
@@ -103,9 +97,6 @@ export class SprintBuilder {
             this.members = [];
         }
 
-        if (this.pipeline === undefined) {
-            this.pipeline = new Pipeline();
-        }
         if (this.pipelineJobs === undefined) {
             this.pipelineJobs = [];
         }
@@ -121,7 +112,6 @@ export class SprintBuilder {
                 this.endDate,
                 this.name,
                 this.type,
-                this.pipeline,
                 this.pipelineJobs
             );
         sprint.setId(id);
