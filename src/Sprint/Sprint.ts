@@ -18,6 +18,7 @@ import { Pipeline } from '../Pipeline';
 import { ActivatedState } from './ActivatedState';
 import * as fs from 'fs';
 import { Job } from '../Jobs/Job';
+import { CanceledState } from './CanceledState';
 
 export class Sprint implements Subject {
     private members: Person<Role>[];
@@ -253,11 +254,16 @@ export class Sprint implements Subject {
             } else {
                 this.productOwner.notifyObservers(`The sprint: '${this.props.getName()}' has been cancelled`)
                 this.scrumMaster.notifyObservers(`The sprint: '${this.props.getName()}' has been cancelled`)
-                this.state.closeSprint(this);
+                this.cancelRelease();
             }
         } else {
             this.notifyObservers(`The current sprint is not a release sprint!`);
         }
+    }
+
+    cancelRelease(): void {
+        this.notifyObservers(`The current sprint has been canceled`);
+        this.setState(new CanceledState())
     }
 
     startPipeline(): void {
