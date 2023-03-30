@@ -2,6 +2,7 @@ import { Person } from "./Person";
 import { Developer } from "./Roles/Developer";
 import { LeadDeveloper } from "./Roles/LeadDeveloper";
 import { Role } from "./Roles/Role";
+import { ProductOwner } from "./Roles/ProductOwner";
 import { ScrumMaster } from "./Roles/ScrumMaster";
 import { Tester } from "./Roles/Tester";
 
@@ -14,6 +15,8 @@ export class PersonFactory {
             return new Person<T>(username, new Tester());
         } else if (role instanceof LeadDeveloper) {
             return new Person<T>(username, new LeadDeveloper());
+        } else if (role instanceof ProductOwner) {
+            return new Person<T>(username, new ProductOwner());
         } else {
             return new Person<T>(username, new Developer());
         }

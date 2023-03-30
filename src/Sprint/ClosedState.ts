@@ -41,6 +41,9 @@ export class ClosedState implements State {
 
     closeSprint(sprint: Sprint): void {
         sprint.notifyObservers("Cannot close a sprint that is already closed.");
+    }
 
+    startPipeline(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot start pipeline on a closed sprint.");
     }
 }

@@ -5,6 +5,7 @@ import { EmailNotifier } from "./Observer/EmailNotifier";
 import { BacklogItem } from "./BackLogItem";
 import { SprintBacklogFactory } from "./BackLogFactory/SprintBackLogFactory";
 import { PersonFactory } from "./PersonFactory";
+import { ProductOwner } from "./Roles/ProductOwner";
 import { ScrumMaster } from "./Roles/ScrumMaster";
 import { Tester } from "./Roles/Tester";
 import { LeadDeveloper } from "./Roles/LeadDeveloper";
@@ -12,11 +13,12 @@ import { Repository } from "./Repository";
 import { SprintType } from "./Sprint/Type";
 import { SprintLogObserver } from "./Observer/SprintLogObserver";
 import { Developer } from "./Roles/Developer";
-import { Pipeline } from "./Pipeline";
+import * as path from 'path';
+import { InstallPackagesJob } from "./Jobs/InstallPackagesJob";
 import { BuildJob } from "./Jobs/BuildJob";
 import { DeployJob } from "./Jobs/DeployJob";
-import { InstallPackagesJob } from "./Jobs/InstallPackagesJob";
 import { TestJob } from "./Jobs/TestJob";
+import { FailingJob } from "./Jobs/FailingJob";
 import { Thread } from "./Thread/Thread";
 
 // Example usage
@@ -25,6 +27,7 @@ import { Thread } from "./Thread/Thread";
 const personFactory = new PersonFactory();
 
 // Create some Person objects
+const productOwner = personFactory.createPerson(new ProductOwner(), "product-owner");
 const scrumMaster = personFactory.createPerson(new ScrumMaster(), "scrum-master");
 let tester = personFactory.createPerson(new Tester(), "tester");
 const leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "lead-dev");
@@ -37,6 +40,8 @@ const slackNotifier = new SlackNotifier("my-slack-username");
 const emailNotifier = new EmailNotifier("my-email-address@example.com");
 
 // Register the observers with the Person objects
+productOwner.addObserver(slackNotifier);
+productOwner.addObserver(emailNotifier);
 scrumMaster.addObserver(slackNotifier);
 scrumMaster.addObserver(emailNotifier);
 tester.addObserver(slackNotifier);
@@ -56,13 +61,22 @@ let items = [
     new BacklogItem("Fix stackoverflow in main.ts", "Stack overflow help???", 12),
 ];
 
-let sprint = scrumMaster.roleActions().createSprint(scrumMaster, leadDeveloper)
+const pipelineJobs = [
+    new InstallPackagesJob(),
+    new BuildJob(),
+    // new FailingJob(),
+    new TestJob(),
+    new DeployJob(),
+];
+
+let sprint = scrumMaster.roleActions().createSprint(productOwner, scrumMaster, leadDeveloper)
     .addStartDate(new Date("2023-03-24"))
     .addEndDate(new Date("2023-04-28"))
     .addName("Release: Stable videogame")
     .addMembers([developer, tester])
     .addType(SprintType.Release)
     .addSprintBackLog(new SprintBacklogFactory().create(new Repository("Project", "Master")))
+    .addPipelineJobs(pipelineJobs)
     .build();
 
 
@@ -125,20 +139,14 @@ sprint.changeBacklogItemPosition(tester, item, tested, doing);
 console.log("\nLead developer verplaatst iets:")
 sprint.changeBacklogItemPosition(leadDeveloper, item, tested, done);
 
+sprint.finish();
 
-const pipelineJobs = [
-    new InstallPackagesJob(),
-    new BuildJob(),
-    new TestJob(),
-    new DeployJob(),
-];
+let isApproved = true;
+sprint.release(isApproved);
 
-const pipelineJobRunner = new Pipeline();
 
-for (const job of pipelineJobs) {
-    job.accept(pipelineJobRunner);
-}
-
+const txtFilePath = path.join(__dirname, '..', 'reviewDocs', 'review.txt');
+// sprint.review(txtFilePath);
 
 let bobDev = personFactory.createPerson(new Developer(), "Bob");
 let henkDev = personFactory.createPerson(new Developer(), "Henk");
@@ -147,9 +155,9 @@ let pimLead = personFactory.createPerson(new LeadDeveloper(), "Pim");
 let masterMelvin = personFactory.createPerson(new ScrumMaster(), "Melvin");
 let gekkeHenkie = personFactory.createPerson(new ScrumMaster(), "Henkie");
 let stijn = personFactory.createPerson(new LeadDeveloper(), "Stijn");
+let moPO = personFactory.createPerson(new ProductOwner(), "Mo");
 
-
-let devopsSprint = masterMelvin.roleActions().createSprint(masterMelvin, pimLead)
+let devopsSprint = masterMelvin.roleActions().createSprint(moPO, masterMelvin, pimLead)
 .addEndDate(new Date("2023-04-28"))
 .addStartDate(new Date("2023-03-24"))
 .addName("Devops project")

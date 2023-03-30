@@ -6,6 +6,11 @@ import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
 import { ClosedState } from "./ClosedState";
+import { Pipeline } from "../Pipeline";
+import { BuildJob } from "../Jobs/BuildJob";
+import { DeployJob } from "../Jobs/DeployJob";
+import { InstallPackagesJob } from "../Jobs/InstallPackagesJob";
+import { TestJob } from "../Jobs/TestJob";
 
 export class FinishedState implements State {
 
@@ -43,6 +48,32 @@ export class FinishedState implements State {
     closeSprint(sprint: Sprint): void {
         sprint.setState(new ClosedState());
         sprint.notifyObservers('Sprint closed');
+    }
+
+    startPipeline(sprint: Sprint): void {
+        const pipelineJobs = sprint.getPipelineJobs();
+        const pipelineJobRunner = sprint.getPipeline();
+
+        console.log("Starting pipeline...");
+
+        for (const job of pipelineJobs) {
+            console.log(`Executing ${job.constructor.name}`);
+            try {
+              job.accept(pipelineJobRunner);
+            } catch (error) {
+              sprint.getScrumMaster().notifyObservers("Pipeline failed with error: " + error);
+              console.error("Error running pipeline job:", error);
+              return;
+            }
+          }
+
+        console.log('Pipeline execution complete.');
+
+        sprint.getScrumMaster().notifyObservers(`${sprint.getName()} has been succesfully released`);
+        sprint.getProductOwner().notifyObservers(`${sprint.getName()} has been succesfully released`);
+
+        this.closeSprint(sprint)
+        // sprint.notifyObservers("Cannot start pipeline on an activated sprint.");
     }
 
 }
