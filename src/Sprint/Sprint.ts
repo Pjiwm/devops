@@ -26,6 +26,7 @@ export class Sprint implements Subject {
     private scrumMaster: Person<ScrumMaster>;
     private leadDeveloper: Person<LeadDeveloper>
     private pipeline: Pipeline;
+    private associatedThreads: Observer[];
     readonly sprintType: SprintType;
 
     constructor(
@@ -49,6 +50,7 @@ export class Sprint implements Subject {
         this.scrumMaster = scrumMaster;
         this.leadDeveloper = leadDeveloper;
         this.pipeline = pipeline;
+        this.associatedThreads = [];
 
         this.members.forEach(member => {
             if (member.roleActions() instanceof Tester) {
@@ -176,7 +178,7 @@ export class Sprint implements Subject {
     }
 
     start(person: Person<Role>): void {
-        if(person === this.getScrumMaster()) {
+        if (person === this.getScrumMaster()) {
             this.state.startSprint(this);
         } else {
             this.notifyObservers(`A sprint can only be started by a scrum master`);
@@ -192,8 +194,7 @@ export class Sprint implements Subject {
     }
 
     addBacklogItem(item: BacklogItem): void {
-        // TODO this can be made better...
-        this.state.addBacklogItem(this, this.getBackLogLists()[0], item);
+        this.state.addBacklogItem(this, this.getTodoList(), item);
     }
 
     swapDeveloper(item: BacklogItem, developer: Person<Role>): void {
@@ -210,6 +211,7 @@ export class Sprint implements Subject {
 
     changeBacklogItemPosition(person: Person<Role>, item: BacklogItem, sourceList: ListStategy, destinationList: ListStategy): void {
         this.state.moveBackLogItem(this, person, item, sourceList, destinationList);
+        this.checkThreadStatus();
     }
 
     startPipeline(person: Person<Role>): void {
@@ -220,4 +222,13 @@ export class Sprint implements Subject {
         }
     }
 
+    addAssociatedThread(thread: Observer): void {
+        this.associatedThreads.push(thread);
+    }
+
+    private checkThreadStatus(): void {
+        this.associatedThreads.forEach(thread => {
+            thread.update(this, "");
+        });
+    }
 }
