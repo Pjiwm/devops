@@ -1,6 +1,4 @@
 import { BacklogItem } from "../BackLogItem";
-import { SprintBacklog } from "../SprintBackLog";
-import { Observer } from "../Observer/Observer";
 import { ListStategy } from "./ListStategy";
 import { Person } from "../Person";
 import { Role } from "../Roles/Role";

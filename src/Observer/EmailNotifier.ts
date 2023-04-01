@@ -13,7 +13,6 @@ class EmailNotifier implements Observer {
   // Update method called by the subject when a change occurs
   update(subject: Subject, message: string): void {
     console.log(`Sending email notification to ${this.emailAddress}: ${message}`);
-    // TODO: Implement sending email notification
   }
 }
 
