@@ -11,10 +11,6 @@ export class ScrumMaster extends Role {
         super.name = "Scrum Master";
     }
 
-    public doScrumMasterStuff() {
-        console.log("I'm a scrum master, I do scrum master stuff");
-    }
-
     public createSprint(productOwner: Person<ProductOwner>, scrumMaster: Person<ScrumMaster>, leadDeveloper: Person<LeadDeveloper> ): SprintBuilder {
         return new SprintBuilder(productOwner, scrumMaster, leadDeveloper);
     }

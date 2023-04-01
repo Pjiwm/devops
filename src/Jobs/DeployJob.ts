@@ -9,9 +9,4 @@ export class DeployJob extends Job {
       return result;
     }
 
-    publishCode(): boolean {
-        // Give download link to the public
-        return true;
-    }
-
   }

@@ -164,9 +164,15 @@ describe("Release sprint", () => {
       sprint.finish();
       expect(sprint.getState() instanceof FinishedState).toBe(true);
     });
+
+    test("Sprint can only bes started by scrum master", () => {
+      sprint.start(developer);
+      expect(sprint.getState() instanceof CreatedState).toBe(true);
+    });
   });
 
   describe("Activated sprint", () => { 
+
     // Test for an activated sprint that you can't add backlog items to the sprint backlog
     test("Activated sprint can't add backlog items", () => {
       const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
@@ -230,6 +236,12 @@ describe("Release sprint", () => {
       sprint.start(scrumMaster);
       sprint.release(true);
       expect(sprint.getState() instanceof ActivatedState).toBe(true);
+    });
+
+    test("Activated sprint released is canceled", () => {
+      sprint.start(scrumMaster);
+      sprint.release(false);
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
     });
 
     test("Activated sprint can't move backlog item if it's not in the todo list", () => {
@@ -743,7 +755,7 @@ describe("Release sprint", () => {
       expect(sprint.getState() instanceof CanceledState).toBe(true);
     });
 
-    test("Finished sprint pipeline can fail whne a job fails", () => {
+    test("Canceled sprint pipeline can fail whne a job fails", () => {
       const personFactory = new PersonFactory();
       productOwner = personFactory.createPerson(new ProductOwner(), "product-owner");
       scrumMaster = personFactory.createPerson(new ScrumMaster(), "Scrum Master");
@@ -789,6 +801,54 @@ describe("Release sprint", () => {
       sprint.cancelRelease();
       sprint.startPipeline();
       expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceld sprint can start pipeline and still go to finished state", () => {
+      const personFactory = new PersonFactory();
+      productOwner = personFactory.createPerson(new ProductOwner(), "product-owner");
+      scrumMaster = personFactory.createPerson(new ScrumMaster(), "Scrum Master");
+      tester = personFactory.createPerson(new Tester(), "tester");
+      leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "Lead Developer");
+      developer = personFactory.createPerson(new Developer(), "dev");
+
+      startDate = new Date("2023-03-24");
+      endDate = new Date("2023-04-28");
+
+      name = "Sprint 2";
+      type = SprintType.Release;
+      backlog = new SprintBacklogFactory().create(new Repository("Project", "Master"))
+
+      pipelineJobs = [
+        new InstallPackagesJob(),
+        new BuildJob(),
+        new TestJob(),
+        new DeployJob(),
+      ];
+
+      sprint = scrumMaster.roleActions().createSprint(productOwner, scrumMaster, leadDeveloper)
+      .addStartDate(startDate)
+      .addEndDate(endDate)
+      .addName(name)
+      .addMembers([developer, tester])
+      .addType(type)
+      .addSprintBackLog(backlog)
+      .addPipelineJobs(pipelineJobs)
+      .build();
+
+      id = sprint.getId();
+
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+
+      sprint.start(scrumMaster);
+
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.startPipeline();
+      expect(sprint.getState() instanceof ClosedState).toBe(true);
     });
   });
 });
