@@ -64,7 +64,7 @@ let items = [
 const pipelineJobs = [
     new InstallPackagesJob(),
     new BuildJob(),
-    new FailingJob(),
+    // new FailingJob(),
     new TestJob(),
     new DeployJob(),
 ];
@@ -141,10 +141,8 @@ sprint.changeBacklogItemPosition(leadDeveloper, item, tested, done);
 
 sprint.finish();
 
-let isApproved = false;
+let isApproved = true;
 sprint.release(isApproved);
-sprint.release(true);
-
 
 
 const txtFilePath = path.join(__dirname, '..', 'reviewDocs', 'review.txt');
@@ -156,7 +154,7 @@ let testerDeZwart = personFactory.createPerson(new Tester(), "M. de Zwart");
 let pimLead = personFactory.createPerson(new LeadDeveloper(), "Pim");
 let masterMelvin = personFactory.createPerson(new ScrumMaster(), "Melvin");
 let gekkeHenkie = personFactory.createPerson(new ScrumMaster(), "Henkie");
-let stijn = personFactory.createPerson(new LeadDeveloper(), "Stijn");
+let leadDevStijn = personFactory.createPerson(new LeadDeveloper(), "Stijn");
 let moPO = personFactory.createPerson(new ProductOwner(), "Mo");
 
 let devopsSprint = masterMelvin.roleActions().createSprint(moPO, masterMelvin, pimLead)
@@ -185,9 +183,9 @@ devopsItems.forEach(item => {
 devopsSprint.start(masterMelvin);
 
 let thread = new Thread(testerDeZwart, devopsItems[2], devopsSprint, "Passwords are not encrypted in DB");
-let stijnMsg = thread.postMessage(stijn, "Are you all stupid?", new Date());
+let stijnMsg = thread.postMessage(leadDevStijn, "Are you all stupid?", new Date());
 stijnMsg?.replyTo(pimLead, "Thank you for your constructive criticism", new Date());
-stijnMsg?.replyTo(stijn, "you're welcome", new Date());
+stijnMsg?.replyTo(leadDevStijn, "you're welcome", new Date());
 let henkieMsg = thread.postMessage(gekkeHenkie, "How about you encrypt deez nuts?", new Date());
 henkieMsg?.replyTo(masterMelvin, "I'm not sure if this is a joke or not", new Date());
 henkieMsg?.replyTo(testerDeZwart, "I'm definitely not gonna test deez nuts, melvin can do that.", new Date());
