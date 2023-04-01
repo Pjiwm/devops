@@ -95,7 +95,7 @@ export class ActivatedState implements State {
         }
 
         if (inTested && toDoing) {
-            sprint.notifyObservers(`${item.getTitle()} Items in testeed cannot be moved to todo.`);
+            sprint.notifyObservers(`${item.getTitle()} Items in tested cannot be moved to todo.`);
             return;
         }
 

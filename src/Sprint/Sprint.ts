@@ -159,15 +159,6 @@ export class Sprint implements Subject {
         this.state = state;
     }
 
-    findBacklogList(item: BacklogItem): ListStategy | undefined {
-        for (const list of this.backlog.getBacklogLists()) {
-            if (list.contains(item)) {
-                return list;
-            }
-        }
-        return undefined;
-    }
-
     // Notify all observers of a change
     notifyObservers(message: string): void {
         for (const observer of this.observers) {

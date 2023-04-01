@@ -30,6 +30,8 @@ import { FinishedState } from '../src/Sprint/FinishedState';
 import { Job } from '../src/Jobs/Job';
 import { SprintBuilder } from '../src/Sprint/SprintBuilder';
 import { DoingList } from '../src/BackLogList/DoingList';
+import { ClosedState } from '../src/Sprint/ClosedState';
+import { CanceledState } from '../src/Sprint/CanceledState';
 
 describe("Release sprint", () => {
   let id: string;
@@ -66,7 +68,6 @@ describe("Release sprint", () => {
     pipelineJobs = [
       new InstallPackagesJob(),
       new BuildJob(),
-      new FailingJob(),
       new TestJob(),
       new DeployJob(),
   ];
@@ -218,15 +219,6 @@ describe("Release sprint", () => {
       sprint.start(scrumMaster);
       expect(sprint.getState() instanceof ActivatedState).toBe(true);
     });
- 
-  //  test("Activated sprint can't finish sprint", () => {
-  //     sprint.setStartDate(new Date());
-  //     sprint.setEndDate(new Date());
-  //     sprint.start(scrumMaster);
-  //     sprint.finish();
-  //     sprint.getState();
-  //     expect(sprint.getState() instanceof ActivatedState).toBe(true);
-  //   });
 
     test("Activated sprint can't close sprint", () => {
       sprint.start(scrumMaster);
@@ -239,61 +231,6 @@ describe("Release sprint", () => {
       sprint.release(true);
       expect(sprint.getState() instanceof ActivatedState).toBe(true);
     });
-
-    /*
-      Write tests for this function in the ActivatedState class so all paths are covered
-       moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void {
-        const toBeTested = source instanceof ReadyForTestingList;
-        const toBeDone = destination instanceof DoneList;
-        const toBeCanceled = destination instanceof TodoList;
-        const beingTested = source instanceof TestingList;
-        const inTested = source instanceof TestedList;
-        const toDoing = destination instanceof TodoList;
-
-        if (source.contains(item) === false) {
-            sprint.notifyObservers(`${item.getTitle()} is not in the ${source.getName()} list.`);
-            return;
-        }
-
-        if (source instanceof DoneList) {
-            sprint.notifyObservers(`${item.getTitle()} is already in the done list.`);
-        }
-
-        if (!sprint.getMembers().includes(person)) {
-            sprint.notifyObservers(`${person.getUsername()} is not a member of this sprint.`);
-            return;
-        }
-
-        if ((toBeTested || beingTested) && !(person.roleActions() instanceof Tester)) {
-            let msg = "is not a tester and cannot move a backlog item from the tested list.";
-            sprint.notifyObservers(`${person.getUsername()} ${msg}`);
-            return;
-        }
-
-        if ((inTested || toBeDone) && !(person.roleActions() instanceof LeadDeveloper)) {
-            let msg = "is not a lead developer and cannot move a backlog item from the tested list.";
-            sprint.notifyObservers(`${person.getUsername()} ${msg}`);
-            return;
-        }
-
-        if (inTested && toDoing) {
-            sprint.notifyObservers(`${item.getTitle()} Items in testeed cannot be moved to todo.`);
-            return;
-        }
-
-
-        if (source !== destination) {
-            source.removeBacklogItem(item);
-            destination.addBacklogItem(item);
-
-            if (toBeCanceled) {
-                sprint.getScrumMaster()
-                    .notifyObservers(`${person.getUsername()} canceled the test of ${item.getTitle()}
-                    assigneed to: ${item.getAssignee()?.getUsername()}`);
-            }
-        }
-    }
-    */
 
     test("Activated sprint can't move backlog item if it's not in the todo list", () => {
       const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
@@ -336,22 +273,78 @@ describe("Release sprint", () => {
       expect(sprint.getTestingList().getBacklogItems()).not.toContain(backlogItem);
     });
 
-    // test("Activated sprint only a lead developer can move backlog item from ready for tested to done", () => {
-    //   const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
-    //   sprint.addBacklogItem(backlogItem);
-    //   sprint.start(scrumMaster);
-    //   let todoList = sprint.getTodoList();
-    //   let doingList = sprint.getDoingList();
-    //   let readyForTestingList = sprint.getReadyForTestingList();
-    //   sprint.changeBacklogItemPosition(developer, backlogItem, todoList, doingList);
-    //   doingList = sprint.getDoingList();
-    //   sprint.changeBacklogItemPosition(developer, backlogItem, doingList, readyForTestingList);
-    //   readyForTestingList = sprint.getReadyForTestingList();
-    //   let testingList = sprint.getTestingList();
-    //   sprint.changeBacklogItemPosition(developer, backlogItem, readyForTestingList, testingList);
-    //   expect(sprint.getReadyForTestingList().getBacklogItems()).toContain(backlogItem);
-    //   expect(sprint.getTestingList().getBacklogItems()).not.toContain(backlogItem);
-    // });
+    test("Activated sprint only a lead developer can move backlog item from ready for tested to done", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      let readyForTestingList = sprint.getReadyForTestingList();
+      sprint.changeBacklogItemPosition(developer, backlogItem, todoList, doingList);
+      
+      doingList = sprint.getDoingList();
+      let testedList = sprint.getTestedList()
+      sprint.changeBacklogItemPosition(tester, backlogItem, doingList, testedList);
+      
+      readyForTestingList = sprint.getReadyForTestingList();
+      let doneList = sprint.getDoneList();
+      testedList = sprint.getTestedList();
+      sprint.changeBacklogItemPosition(developer, backlogItem, testedList, doneList);
+      expect(sprint.getTestedList().getBacklogItems()).toContain(backlogItem);
+      expect(sprint.getDoneList().getBacklogItems()).not.toContain(backlogItem);
+      
+      testedList = sprint.getTestedList();
+      doneList = sprint.getDoneList();
+      sprint.changeBacklogItemPosition(leadDeveloper, backlogItem, testedList, doneList);
+      expect(sprint.getDoneList().getBacklogItems()).toContain(backlogItem);
+      expect(sprint.getTestedList().getBacklogItems()).not.toContain(backlogItem);
+    });
+
+
+    test("Activated sprint can't move backlog item from in testing to to doing", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      let readyForTestingList = sprint.getReadyForTestingList();
+      sprint.changeBacklogItemPosition(developer, backlogItem, todoList, doingList);
+
+      doingList = sprint.getDoingList();
+      let testedList = sprint.getTestedList()
+      sprint.changeBacklogItemPosition(tester, backlogItem, doingList, testedList); 
+
+      doingList = sprint.getDoingList();
+      testedList = sprint.getTestedList();
+      sprint.changeBacklogItemPosition(tester, backlogItem, testedList, doingList);
+
+      expect(sprint.getTestedList().getBacklogItems()).toContain(backlogItem);
+      expect(sprint.getDoingList().getBacklogItems()).not.toContain(backlogItem);
+    });
+
+    test("Activated sprint can't move backlog item from in done to done", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      let readyForTestingList = sprint.getReadyForTestingList();
+      sprint.changeBacklogItemPosition(developer, backlogItem, todoList, doingList);
+
+      doingList = sprint.getDoingList();
+      let testedList = sprint.getTestedList()
+      sprint.changeBacklogItemPosition(tester, backlogItem, doingList, testedList); 
+
+      let doneList = sprint.getDoneList();
+      testedList = sprint.getTestedList();
+      sprint.changeBacklogItemPosition(leadDeveloper, backlogItem, testedList, doneList);
+
+      doneList = sprint.getDoneList();
+      sprint.changeBacklogItemPosition(leadDeveloper, backlogItem, doneList, doneList);
+
+      expect(sprint.getDoneList().getBacklogItems()).toContain(backlogItem);
+    });
 
 
     test("Activated sprint can move backlog item from todo to doing", () => {
@@ -364,8 +357,438 @@ describe("Release sprint", () => {
       expect(sprint.getTodoList().getBacklogItems()).not.toContain(backlogItem);
       expect(sprint.getDoingList().getBacklogItems()).toContain(backlogItem);
     });
+  });
 
+  describe("Finished sprint", () => {
+    test("Finsihed sprint can't move backlog items", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      let readyForTestingList = sprint.getReadyForTestingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, doingList, readyForTestingList);
+      expect(sprint.getDoingList().getBacklogItems()).toContain(backlogItem);
+      expect(sprint.getReadyForTestingList().getBacklogItems()).not.toContain(backlogItem);
+    });
 
+    test("Finsihed sprint can't set name", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.setName("New name");
+      expect(sprint.getName()).not.toBe("New name");
+    });
 
+    test("Finsihed sprint can't set start date", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.setStartDate(new Date());
+      expect(sprint.getStartDate()).not.toBe(new Date());
+    });
+
+    test("Finsihed sprint can't set end date", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.setEndDate(new Date());
+      expect(sprint.getEndDate()).not.toBe(new Date());
+    });
+
+    test("Finsihed sprint can't add backlog item", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.addBacklogItem(backlogItem);
+      expect(sprint.getTodoList().getBacklogItems()).not.toContain(backlogItem);
+    });
+
+    test("Finsihed sprint can't remove backlog item", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.removeBacklogItem(backlogItem);
+      expect(sprint.getDoingList().getBacklogItems()).toContain(backlogItem);
+    });
+    
+    test("Finsihed sprint can't start sprint", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.start(scrumMaster);
+      expect(sprint.getStartDate()).not.toBe(new Date());
+    });
+
+    test("Finsihed sprint can't finish sprint", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.finish();
+      expect(sprint.getEndDate()).not.toBe(new Date());
+    });
+
+    test("Finsihed sprint can close sprint", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.close();
+      expect(sprint.getState() instanceof ClosedState).toBe(true);
+    });
+
+    test("Finished sprint can start pipeline", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.startPipeline();
+      expect(sprint.getState() instanceof ClosedState).toBe(true);
+    });
+
+    test("Finished sprint pipeline can fail whne a job fails", () => {
+      const personFactory = new PersonFactory();
+      productOwner = personFactory.createPerson(new ProductOwner(), "product-owner");
+      scrumMaster = personFactory.createPerson(new ScrumMaster(), "Scrum Master");
+      tester = personFactory.createPerson(new Tester(), "tester");
+      leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "Lead Developer");
+      developer = personFactory.createPerson(new Developer(), "dev");
+
+      startDate = new Date("2023-03-24");
+      endDate = new Date("2023-04-28");
+
+      name = "Sprint 2";
+      type = SprintType.Release;
+      backlog = new SprintBacklogFactory().create(new Repository("Project", "Master"))
+
+      pipelineJobs = [
+        new InstallPackagesJob(),
+        new BuildJob(),
+        new FailingJob(),
+        new TestJob(),
+        new DeployJob(),
+      ];
+
+      sprint = scrumMaster.roleActions().createSprint(productOwner, scrumMaster, leadDeveloper)
+      .addStartDate(startDate)
+      .addEndDate(endDate)
+      .addName(name)
+      .addMembers([developer, tester])
+      .addType(type)
+      .addSprintBackLog(backlog)
+      .addPipelineJobs(pipelineJobs)
+      .build();
+
+      id = sprint.getId();
+
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.startPipeline();
+      expect(sprint.getState() instanceof FinishedState).toBe(true);
+    });
+   });
+
+   describe("ClosedState", () => {
+     test("Closed sprint cannot move backlog item", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.close();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, doingList, todoList);
+      expect(sprint.getState() instanceof ClosedState).toBe(true);
+     });
+
+     test("Closed sprint cannot set name", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.close();
+      sprint.setName("New name");
+      expect(sprint.getState() instanceof ClosedState).toBe(true);
+     });
+
+      test("Closed sprint cannot set start date", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        sprint.addBacklogItem(backlogItem);
+        sprint.start(scrumMaster);
+        let todoList = sprint.getTodoList();
+        let doingList = sprint.getDoingList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+        sprint.finish();
+        sprint.close();
+        sprint.setStartDate(new Date("2023-03-24"));
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
+
+      test("Closed sprint cannot set end date", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        sprint.addBacklogItem(backlogItem);
+        sprint.start(scrumMaster);
+        let todoList = sprint.getTodoList();
+        let doingList = sprint.getDoingList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+        sprint.finish();
+        sprint.close();
+        sprint.setEndDate(new Date("2023-04-28"));
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
+
+      test("Closed sprint cannot add backlog item", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        sprint.addBacklogItem(backlogItem);
+        sprint.start(scrumMaster);
+        let todoList = sprint.getTodoList();
+        let doingList = sprint.getDoingList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+        sprint.finish();
+        sprint.close();
+        sprint.addBacklogItem(new BacklogItem("Backlog item 2", "This is a backlog item", 5));
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
+
+      test("Closed sprint cannot remove backlog item", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        sprint.addBacklogItem(backlogItem);
+        sprint.start(scrumMaster);
+        let todoList = sprint.getTodoList();
+        let doingList = sprint.getDoingList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+        sprint.finish();
+        sprint.close();
+        sprint.removeBacklogItem(backlogItem);
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
+
+      test("Closed sprint cannot start sprint", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        sprint.addBacklogItem(backlogItem);
+        sprint.start(scrumMaster);
+        let todoList = sprint.getTodoList();
+        let doingList = sprint.getDoingList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+        sprint.finish();
+        sprint.close();
+        sprint.start(scrumMaster);
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
+
+      test("Closed sprint cannot finish sprint", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        sprint.addBacklogItem(backlogItem);
+        sprint.start(scrumMaster);
+        let todoList = sprint.getTodoList();
+        let doingList = sprint.getDoingList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+        sprint.finish();
+        sprint.close();
+        sprint.finish();
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
+
+      test("Closed sprint cannot close sprint", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        sprint.addBacklogItem(backlogItem);
+        sprint.start(scrumMaster);
+        let todoList = sprint.getTodoList();
+        let doingList = sprint.getDoingList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+        sprint.finish();
+        sprint.close();
+        sprint.close();
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
+
+      test("Closed sprint cannot start pipeline", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        sprint.addBacklogItem(backlogItem);
+        sprint.start(scrumMaster);
+        let todoList = sprint.getTodoList();
+        let doingList = sprint.getDoingList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+        sprint.finish();
+        sprint.close();
+        sprint.startPipeline();
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
+   });
+
+   describe("Canceld state", () => {
+    test("Canceled sprint cannot move backlog item", () => {
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, doingList, todoList);
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceled sprint cannot set name", () => {
+      sprint.start(scrumMaster);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.setName("New name");
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceled sprint cannot set start date", () => {
+      sprint.start(scrumMaster);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.setStartDate(new Date());
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceled sprint cannot set end date", () => {
+      sprint.start(scrumMaster);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.setEndDate(new Date());
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceled sprint cannot add backlog item", () => {
+      sprint.start(scrumMaster);
+      sprint.finish();
+      sprint.cancelRelease();
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceled sprint cannot remove backlog item", () => {
+      sprint.start(scrumMaster);
+      sprint.finish();
+      sprint.cancelRelease();
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+      sprint.removeBacklogItem(backlogItem);
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceled sprint cannot start sprint", () => {
+      sprint.start(scrumMaster);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.start(scrumMaster);
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceled sprint cannot finish sprint", () => {
+      sprint.start(scrumMaster);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.finish();
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Canceled sprint cannot close sprint", () => {
+      sprint.start(scrumMaster);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.close();
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
+
+    test("Finished sprint pipeline can fail whne a job fails", () => {
+      const personFactory = new PersonFactory();
+      productOwner = personFactory.createPerson(new ProductOwner(), "product-owner");
+      scrumMaster = personFactory.createPerson(new ScrumMaster(), "Scrum Master");
+      tester = personFactory.createPerson(new Tester(), "tester");
+      leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "Lead Developer");
+      developer = personFactory.createPerson(new Developer(), "dev");
+
+      startDate = new Date("2023-03-24");
+      endDate = new Date("2023-04-28");
+
+      name = "Sprint 2";
+      type = SprintType.Release;
+      backlog = new SprintBacklogFactory().create(new Repository("Project", "Master"))
+
+      pipelineJobs = [
+        new InstallPackagesJob(),
+        new BuildJob(),
+        new FailingJob(),
+        new TestJob(),
+        new DeployJob(),
+      ];
+
+      sprint = scrumMaster.roleActions().createSprint(productOwner, scrumMaster, leadDeveloper)
+      .addStartDate(startDate)
+      .addEndDate(endDate)
+      .addName(name)
+      .addMembers([developer, tester])
+      .addType(type)
+      .addSprintBackLog(backlog)
+      .addPipelineJobs(pipelineJobs)
+      .build();
+
+      id = sprint.getId();
+
+      const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+      sprint.addBacklogItem(backlogItem);
+
+      sprint.start(scrumMaster);
+      let todoList = sprint.getTodoList();
+      let doingList = sprint.getDoingList();
+      sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doingList);
+      sprint.finish();
+      sprint.cancelRelease();
+      sprint.startPipeline();
+      expect(sprint.getState() instanceof CanceledState).toBe(true);
+    });
   });
 });

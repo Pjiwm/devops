@@ -18,6 +18,7 @@ export class FinishedState implements State {
     moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void {
         sprint.notifyObservers("Cannot move backlog item in a finished sprint.");
     }
+    
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
         sprint.notifyObservers("Cannot set name in a finshed sprint.");
     }
