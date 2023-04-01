@@ -76,5 +76,4 @@ export class FinishedState implements State {
         this.closeSprint(sprint)
         // sprint.notifyObservers("Cannot start pipeline on an activated sprint.");
     }
-
 }
