@@ -32,4 +32,8 @@ export class ReadyForTestingList extends ListStategy {
     public addPerson(person: Person<Role>): void {
         this.testers.push(person);
     }
+
+    public getTesters(): Person<Role>[] {
+        return this.testers;
+    }
 }
