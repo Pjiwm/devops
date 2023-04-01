@@ -1,7 +1,22 @@
 
 
 # devops
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=Pjiwm_devops)](https://sonarcloud.io/summary/new_code?id=Pjiwm_devops)
+
+School project for building a kanban board with a variety of devops features.
+The goal of this project is to use a handful of design patterns to achive a structured and maintainable codebase.
+
+
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&labelColor=ffffff&logoColor=3178C6&logo=typescript)
+![Jest](https://img.shields.io/badge/Jest-323330?style=for-the-badge&logo=Jest&logoColor=white)
+![NodeJS](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Pjiwm_devops&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Pjiwm_devops)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/pjiwm/devops)
+![workflow](https://github.com/Pjiwm/devops/actions/workflows/build.yml/badge.svg)
+![workflow](https://github.com/Pjiwm/devops/actions/workflows/jest.yml/badge.svg)
+![workflow](https://github.com/Pjiwm/devops/actions/workflows/code_quality.yml/badge.svg)
+
+
 ## Sprint Backlog
 ![image](https://github.com/Pjiwm/devops/blob/main/docs/uml/BackLogFactory_diagram.png)
 ![image](https://github.com/Pjiwm/devops/blob/main/docs/uml/BackLogList_diagram.png)
