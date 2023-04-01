@@ -5,9 +5,4 @@ export class Developer extends Role {
         super();
         super.name = "Developer";
     }
-
-    public doDevStuff() {
-        console.log("I'm a developer, I do dev stuff");
-    }
-
   }
