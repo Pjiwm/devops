@@ -15,7 +15,6 @@ import { LeadDeveloper } from '../Roles/LeadDeveloper';
 import { ProductOwner } from '../Roles/ProductOwner';
 import { Tester } from '../Roles/Tester';
 import { Pipeline } from '../Pipeline';
-import { ActivatedState } from './ActivatedState';
 import * as fs from 'fs';
 import { Job } from '../Jobs/Job';
 import { CanceledState } from './CanceledState';
@@ -38,20 +37,16 @@ export class Sprint implements Subject {
         productOwner: Person<ProductOwner>,
         scrumMaster: Person<ScrumMaster>,
         leadDeveloper: Person<LeadDeveloper>,
-        members: Person<Role>[],
         backlog: SprintBacklog,
-        startDate: Date,
-        endDate: Date,
-        name: string,
+        sprintProperties: SprintProperties,
         type: SprintType,
         pipelineJobs: Job[]
     ) {
 
-        members.push(scrumMaster, leadDeveloper);
         this.productOwner = productOwner;
-        this.members = members;
+        this.members = [scrumMaster, leadDeveloper];
         this.backlog = backlog;
-        this.props = new SprintProperties(name, startDate, endDate);
+        this.props = sprintProperties;
         this.state = new CreatedState();
         this.id = nanoid();
         this.sprintType = type;
@@ -77,6 +72,10 @@ export class Sprint implements Subject {
 
     getMembers(): Person<Role>[] {
         return this.members;
+    }
+
+    addMember(member: Person<Role>): void {
+        this.members.push(member);
     }
 
     getBacklog(): SprintBacklog {

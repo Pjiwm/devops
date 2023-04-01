@@ -11,6 +11,7 @@ import { SprintBacklog } from "../SprintBackLog";
 import { Sprint } from "./Sprint";
 import { SprintType } from "./Type";
 import { Job } from "../Jobs/Job";
+import { SprintProperties } from "./SprintProperties";
 
 export class SprintBuilder {
     private sprintBacklog: SprintBacklog | undefined;
@@ -101,20 +102,21 @@ export class SprintBuilder {
             this.pipelineJobs = [];
         }
 
+        let sprintProps = new SprintProperties(this.name, this.startDate, this.endDate);
         let sprint =
             new Sprint(
                 this.productOwner,
                 this.scrumMaster,
                 this.leadDeveloper,
-                this.members,
                 this.sprintBacklog,
-                this.startDate,
-                this.endDate,
-                this.name,
+                sprintProps,
                 this.type,
                 this.pipelineJobs
             );
         sprint.setId(id);
+        this.members.forEach(member => {
+            sprint.addMember(member);
+        });
         return sprint;
     }
 }
