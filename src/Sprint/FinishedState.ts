@@ -44,5 +44,8 @@ export class FinishedState implements State {
         sprint.setState(new ClosedState());
         sprint.notifyObservers('Sprint closed');
     }
-
+    
+    startPipeline(sprint: Sprint): void {
+        throw new Error("Method not implemented.");
+    }
 }
