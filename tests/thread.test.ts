@@ -16,6 +16,7 @@ import { Tester } from "../src/Roles/Tester";
 import { SprintType } from "../src/Sprint/Type";
 import { Thread } from "../src/Thread/Thread";
 import { EmailNotifier } from "../src/Observer/EmailNotifier";
+import { SlackNotifier } from "../src/Observer/SlackNotifier";
 
 describe("Thread", () => {
 
@@ -24,8 +25,11 @@ describe("Thread", () => {
     let scrumMaster = personFactory.createPerson(new ScrumMaster(), "Scrum Master");
     let tester = personFactory.createPerson(new Tester(), "tester");
     let leadMail = new EmailNotifier("Lead@gmail.com");
+    let leadSlack = new SlackNotifier("LeadSlack");
     let leadDeveloper = personFactory.createPerson(new LeadDeveloper(), "Lead Developer");
     leadDeveloper.addObserver(leadMail);
+    leadDeveloper.addObserver(leadSlack);
+    leadDeveloper.removeObserver(leadSlack);
     let devMail = new EmailNotifier("dev@gmail.com");
     let developer = personFactory.createPerson(new Developer(), "dev");
     developer.addObserver(devMail);
@@ -59,6 +63,7 @@ describe("Thread", () => {
     sprint.start(scrumMaster);
 
     test("Threads can have messages and replies", () => {
+
         const thread = new Thread(developer, backlogItem, sprint, "What are we building?");
         thread.postMessage(scrumMaster, "A new feature", new Date());
         thread.postMessage(leadDeveloper, "A new feature", new Date());
@@ -101,4 +106,5 @@ describe("Thread", () => {
         expect(newReply).toBe(undefined);
         expect(thread2.isClosed()).toBe(true);
     });
+
 });
