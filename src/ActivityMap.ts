@@ -17,6 +17,10 @@ export class ActivityMap {
         this.activities.delete(activity);
     }
 
+    public length(): number {
+        return this.activities.size;
+    }
+
     public getActivity(activity: string): boolean {
         let value = this.activities.get(activity);
         if (value === undefined) {
