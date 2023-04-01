@@ -1,5 +1,4 @@
 import { BacklogItem } from "../BackLogItem";
-import { Observer } from "../Observer/Observer";
 import { Person } from "../Person";
 import { Role } from "../Roles/Role";
 

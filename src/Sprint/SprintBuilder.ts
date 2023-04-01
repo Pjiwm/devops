@@ -1,7 +1,6 @@
 import { nanoid } from "nanoid";
 import { SprintBacklogFactory } from "../BackLogFactory/SprintBackLogFactory";
 import { Person } from "../Person";
-import { Pipeline } from "../Pipeline";
 import { Repository } from "../Repository";
 import { LeadDeveloper } from "../Roles/LeadDeveloper";
 import { Role } from "../Roles/Role";

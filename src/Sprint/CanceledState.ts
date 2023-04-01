@@ -5,12 +5,6 @@ import { Role } from "../Roles/Role";
 import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
-import { ClosedState } from "./ClosedState";
-import { Pipeline } from "../Pipeline";
-import { BuildJob } from "../Jobs/BuildJob";
-import { DeployJob } from "../Jobs/DeployJob";
-import { InstallPackagesJob } from "../Jobs/InstallPackagesJob";
-import { TestJob } from "../Jobs/TestJob";
 import { FinishedState } from "./FinishedState";
 
 export class CanceledState implements State {

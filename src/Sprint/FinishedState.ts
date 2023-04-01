@@ -6,12 +6,6 @@ import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
 import { ClosedState } from "./ClosedState";
-import { CanceledState } from "./CanceledState";
-import { Pipeline } from "../Pipeline";
-import { BuildJob } from "../Jobs/BuildJob";
-import { DeployJob } from "../Jobs/DeployJob";
-import { InstallPackagesJob } from "../Jobs/InstallPackagesJob";
-import { TestJob } from "../Jobs/TestJob";
 
 export class FinishedState implements State {
 
@@ -74,6 +68,5 @@ export class FinishedState implements State {
         sprint.getProductOwner().notifyObservers(`${sprint.getName()} has been succesfully released`);
 
         this.closeSprint(sprint)
-        // sprint.notifyObservers("Cannot start pipeline on an activated sprint.");
     }
 }
