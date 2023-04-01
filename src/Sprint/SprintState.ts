@@ -15,6 +15,7 @@ interface State {
     finishSprint(sprint: Sprint): void;
     closeSprint(sprint: Sprint): void;
     moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void;
+    startPipeline(sprint: Sprint): void;
 }
 
 export { State }

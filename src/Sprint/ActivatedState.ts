@@ -13,6 +13,7 @@ import { FinishedState } from "./FinishedState";
 import { Sprint } from "./Sprint";
 import { SprintProperties } from "./SprintProperties";
 import { State } from "./SprintState";
+import { SprintType } from "./Type";
 
 export class ActivatedState implements State {
     setName(sprint: Sprint, props: SprintProperties, name: string): void {
@@ -41,12 +42,23 @@ export class ActivatedState implements State {
             sprint.notifyObservers("Cannot finish an activated sprint before its end date.");
         }
         sprint.setState(new FinishedState());
+
+        if(sprint.sprintType == SprintType.Review) {
+            sprint.notifyObservers("The review sprint is finished");
+        }
+
+        if(sprint.sprintType == SprintType.Release) {
+            sprint.notifyObservers("The release sprint is finished");
+        }
     }
 
     closeSprint(sprint: Sprint): void {
         sprint.notifyObservers("Cannot close an activated sprint.");
     }
 
+    startPipeline(sprint: Sprint): void {
+        sprint.notifyObservers("Cannot start pipeline on an activated sprint.");
+    }
 
     moveBackLogItem(sprint: Sprint, person: Person<Role>, item: BacklogItem, source: ListStategy, destination: ListStategy): void {
         const toBeTested = source instanceof ReadyForTestingList;
