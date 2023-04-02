@@ -1,4 +1,3 @@
-import { BacklogItem } from "../BackLogItem";
 import { ListStategy } from "../BackLogList/ListStategy";
 import { TodoList } from "../BackLogList/TodoList";
 import { DoingList } from "../BackLogList/DoingList";
