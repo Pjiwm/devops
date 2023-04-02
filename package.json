@@ -11,19 +11,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Pjiwm/Cinema-Avans.git"
+    "url": "git+https://github.com/Pjiwm/devops.git"
   },
   "keywords": [
     "Devops",
     "TS",
-    "school"
+    "school",
+    "design-patterns"
   ],
   "author": "Pim, Melvin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Pjiwm/Cinema-Avans/issues"
+    "url": "https://github.com/Pjiwm/devops/issues"
   },
-  "homepage": "https://github.com/Pjiwm/Cinema-Avans#readme",
+  "homepage": "https://github.com/Pjiwm/devops#readme",
   "devDependencies": {
     "@types/jest": "^29.4.0",
     "jest": "^29.4.1",
