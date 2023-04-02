@@ -85,6 +85,7 @@ sprint.addObserver(logObserver);
 
 // Add backlog items
 sprint.addBacklogItem(items[0])
+sprint.addBacklogItem(items[1])
 
 
 sprint.start(scrumMaster);
@@ -101,6 +102,12 @@ let testing = sprint.getTestingList()
 let tested = sprint.getTestedList()
 
 let item = todo.getBacklogItems()[0];
+let itemTwo = todo.getBacklogItems()[1];
+
+item.setAssignee(developer);
+console.log(itemTwo);
+console.log(leadDeveloper.getUsername());
+itemTwo.setAssignee(leadDeveloper);
 
 console.log("\nDev doet iets naar doing:")
 sprint.changeBacklogItemPosition(developer, item, todo, doing);
@@ -139,10 +146,18 @@ sprint.changeBacklogItemPosition(tester, item, tested, doing);
 console.log("\nLead developer verplaatst iets:")
 sprint.changeBacklogItemPosition(leadDeveloper, item, tested, done);
 
+
+sprint.changeBacklogItemPosition(tester, itemTwo, todo, doing);
+sprint.changeBacklogItemPosition(tester, itemTwo, doing, readyTesting);
+sprint.changeBacklogItemPosition(tester, itemTwo, readyTesting, testing);
+sprint.changeBacklogItemPosition(tester, itemTwo, testing, tested);
+sprint.changeBacklogItemPosition(leadDeveloper, itemTwo, tested, done);
+
 sprint.finish();
 
 let isApproved = true;
 sprint.release(isApproved);
+console.log(sprint.generateSprintReport("TestRapport", "TestRapport footer"));
 
 
 const txtFilePath = path.join(__dirname, '..', 'reviewDocs', 'review.txt');

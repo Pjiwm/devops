@@ -18,6 +18,8 @@ import { Pipeline } from '../Pipeline';
 import * as fs from 'fs';
 import { Job } from '../Jobs/Job';
 import { CanceledState } from './CanceledState';
+import { SprintReport } from './SprintReport';
+import { ClosedState } from './ClosedState';
 
 export class Sprint implements Subject {
     private members: Person<Role>[];
@@ -40,7 +42,7 @@ export class Sprint implements Subject {
         backlog: SprintBacklog,
         sprintProperties: SprintProperties,
         type: SprintType,
-        pipelineJobs: Job[]
+        pipelineJobs: Job[],
     ) {
 
         this.productOwner = productOwner;
@@ -262,6 +264,18 @@ export class Sprint implements Subject {
 
     addAssociatedThread(thread: Observer): void {
         this.associatedThreads.push(thread);
+    }
+
+    generateSprintReport(headers: string, footers: string): string { 
+        if(this.state instanceof ClosedState) {
+            let sprintReport = new SprintReport(this);
+            sprintReport.setHeaders(headers);
+            sprintReport.setFooters(footers);
+            return sprintReport.generateReport();
+        } else {
+            this.notifyObservers(`The current sprint is not closed!`);
+            return "The current sprint is not closed!";
+        }
     }
 
     private checkThreadStatus(): void {
