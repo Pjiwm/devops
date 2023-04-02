@@ -672,6 +672,48 @@ describe("Release sprint", () => {
         sprint.startPipeline();
         expect(sprint.getState() instanceof ClosedState).toBe(true);
       });
+
+      test("Closed sprint generate report", () => {
+        const backlogItem = new BacklogItem("Backlog item 1", "This is a backlog item", 5);
+        const backlogItemTwo = new BacklogItem("Backlog item 2", "This is a backlog item 2", 10);
+        sprint.addBacklogItem(backlogItem);
+        sprint.addBacklogItem(backlogItemTwo);
+
+        backlogItem.setAssignee(developer);
+        backlogItemTwo.setAssignee(tester);
+
+        sprint.start(scrumMaster);
+
+        sprint.changeBacklogItemPosition(developer, backlogItem, sprint.getTodoList(), sprint.getDoingList());
+        sprint.changeBacklogItemPosition(developer, backlogItemTwo, sprint.getTodoList(), sprint.getDoingList());
+
+        sprint.changeBacklogItemPosition(tester, backlogItem, sprint.getDoingList(), sprint.getReadyForTestingList());
+        sprint.changeBacklogItemPosition(tester, backlogItemTwo, sprint.getDoingList(), sprint.getReadyForTestingList());
+
+        sprint.changeBacklogItemPosition(tester, backlogItem, sprint.getReadyForTestingList(), sprint.getTestingList());
+        sprint.changeBacklogItemPosition(tester, backlogItemTwo, sprint.getReadyForTestingList(), sprint.getTestingList());
+
+        sprint.changeBacklogItemPosition(tester, backlogItem, sprint.getTestingList(), sprint.getTestedList());
+        sprint.changeBacklogItemPosition(tester, backlogItemTwo, sprint.getTestingList(), sprint.getTestedList());
+
+        sprint.changeBacklogItemPosition(leadDeveloper, backlogItem, sprint.getTestedList(), sprint.getDoneList());
+        sprint.changeBacklogItemPosition(leadDeveloper, backlogItemTwo, sprint.getTestedList(), sprint.getDoneList());
+
+        let todoList = sprint.getTodoList();
+        let doneList = sprint.getDoneList();
+        sprint.changeBacklogItemPosition(scrumMaster, backlogItem, todoList, doneList);
+        sprint.finish();
+        sprint.close();
+        let report = sprint.generateSprintReport("HeaderReport", "FooterReport");
+        console.log(report);
+        // Expect report to contain burndown chart total of 15
+        expect(report).toContain("15");
+        expect(report).toContain("HeaderReport");
+        expect(report).toContain("FooterReport");
+        expect(report).toContain("FooterReport");
+        
+        expect(sprint.getState() instanceof ClosedState).toBe(true);
+      });
    });
 
    describe("Canceld state", () => {
@@ -851,4 +893,5 @@ describe("Release sprint", () => {
       expect(sprint.getState() instanceof ClosedState).toBe(true);
     });
   });
+
 });
