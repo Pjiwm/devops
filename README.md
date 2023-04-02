@@ -17,8 +17,7 @@ The goal of this project is to use a handful of design patterns to achive a stru
 ![workflow](https://github.com/Pjiwm/devops/actions/workflows/code_quality.yml/badge.svg)
 
 
-## Sprint Backlog
-![image](https://github.com/Pjiwm/devops/blob/main/docs/uml/BackLogFactory_diagram.png)
+## List strategy
 ![image](https://github.com/Pjiwm/devops/blob/main/docs/uml/BackLogList_diagram.png)
 
 
@@ -39,6 +38,7 @@ The goal of this project is to use a handful of design patterns to achive a stru
 ![image](https://github.com/Pjiwm/devops/blob/main/docs/uml/Roles_diagram.png)
 
 ## Sprint backlog
+![image](https://github.com/Pjiwm/devops/blob/main/docs/uml/BackLogFactory_diagram.png)
 ![image](https://github.com/Pjiwm/devops/blob/main/docs/uml/SprintBacklog_diagram.png)
 
 ## Sprint
